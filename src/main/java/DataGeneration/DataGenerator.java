@@ -1,8 +1,4 @@
-package control;
-
-import model.Order;
-import model.OrderItem;
-import model.Product;
+package DataGeneration;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
