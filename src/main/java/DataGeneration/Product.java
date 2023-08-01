@@ -1,4 +1,4 @@
-package model;
+package DataGeneration;
 
 public class Product {
     public int id;

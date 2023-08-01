@@ -1,4 +1,4 @@
-package model;
+package DataGeneration;
 
 import java.util.Random;
 

@@ -1,9 +1,5 @@
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+package control;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,11 +33,11 @@ public class JdbcMySQL {
 
     	//connecting to second database file loaded at end of first assignment
     	//update the url to your last and first name
-        String url = "jdbc:mysql://localhost:3306/capaultom_2";
+        String url = "jdbc:mysql://localhost:3306/schmidtpaul_3";
         
         //if you created a separate account, use that, otherwise use root
-        String user = "capaultom";
-        String password = "MyTestPassword!!";
+        String user = "root";
+        String password = "R0ck3tD0g!Ps";
         
         //quickly grab everything from Customers table and display to show everything worked
         String query = "SELECT * FROM Customers";
@@ -49,10 +45,18 @@ public class JdbcMySQL {
         try (Connection con = DriverManager.getConnection(url, user, password);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query)) {
-
+            System.out.println("CONNECTION OK");
+            ResultSetMetaData resultMeta = rs.getMetaData();
+            int columns = resultMeta.getColumnCount();
+            for (int i = 1; i <= columns; i++) {
+                System.out.print(resultMeta.getColumnName(i) + ", ");
+            }
+            System.out.println();
             while (rs.next()) {
-                
-                System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getInt(3) + " " + rs.getDouble(4));
+                for (int i = 1; i <= columns; i++) {
+                    System.out.print(rs.getObject(i) + ", ");
+                }
+                System.out.println();
             }
 
         } catch (SQLException ex) {

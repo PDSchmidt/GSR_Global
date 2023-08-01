@@ -1,14 +1,14 @@
-package model;
+package DataGeneration;
 import java.util.GregorianCalendar;
 public class RandomDate {
     public static GregorianCalendar randomDate(){
         GregorianCalendar gc = new GregorianCalendar();
 
-        int year = randBetween(1999, 2023);
+        int year = randBetween(2020, 2023);
 
         gc.set(gc.YEAR, year);
 
-        int dayOfYear = randBetween(1, gc.getActualMaximum(gc.DAY_OF_YEAR));
+        int dayOfYear = randBetween(1, 212);
 
         gc.set(gc.DAY_OF_YEAR, dayOfYear);
 

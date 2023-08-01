@@ -1,4 +1,4 @@
-package model;
+package DataGeneration;
 
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -12,7 +12,7 @@ public class Order {
     private int cusID;
     private int locID;
     private double totalCost;
-    private GregorianCalendar date;
+    private GregorianCalendar orderDate;
     private String orderStatus;
 
     public Order(int id, List<String> addresses, List<String> zips){
@@ -22,12 +22,12 @@ public class Order {
         Random rand = new Random();
         locID = rand.nextInt(10) + 1;
         cusID = rand.nextInt(20) + 1;
-        date = RandomDate.randomDate();
-        deliv = new Delivery(id, date, addresses.get(cusID-1), zips.get(cusID-1));
+        orderDate = RandomDate.randomDate();
+        deliv = new Delivery(id, orderDate, addresses.get(cusID-1), zips.get(cusID-1));
         if(deliv.deliveryStatus.equals("DELIVERED")) {
             orderStatus = "COMPLETE";
         } else {
-            int status = rand.nextInt(1, 4);
+            int status = rand.nextInt(3) + 1;
             switch (status) {
                 case 1:
                     orderStatus = "PENDING PAYMENT";
@@ -36,9 +36,6 @@ public class Order {
                     orderStatus = "READY TO SHIP";
                     break;
                 case 3:
-                    orderStatus = "SHIPPED";
-                    break;
-                case 4:
                     orderStatus = "PROCESSING";
                     break;
             }
@@ -59,9 +56,14 @@ public class Order {
         }
         return s.toString();
     }
+    private String orderDateString() {
+        return orderDate.get(orderDate.YEAR) + "-" +
+                (orderDate.get(orderDate.MONTH) + 1) + "-" + orderDate.get(orderDate.DAY_OF_MONTH);
+    }
     @Override
     public String toString(){
         String cost = String.format("%.2f", totalCost);
-        return "("+ cusID + ", " + id + ", " + locID + ", " + cost + ", " + "\"" + orderStatus + "\")";
+        return "("+ cusID + ", " + id + ", " + locID + ", \"" +
+                orderDateString() + "\", " + cost + ", " + "\"" + orderStatus + "\")";
     }
 }
