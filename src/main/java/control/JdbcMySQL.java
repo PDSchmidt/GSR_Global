@@ -33,11 +33,11 @@ public class JdbcMySQL {
 
     	//connecting to second database file loaded at end of first assignment
     	//update the url to your last and first name
-        String url = "jdbc:mysql://localhost:3306/schmidtpaul_3";
+        String url = "jdbc:mysql://localhost:3306/" + Credentials.db;
         
         //if you created a separate account, use that, otherwise use root
-        String user = "root";
-        String password = "R0ck3tD0g!Ps";
+        String user = Credentials.user;
+        String password = Credentials.pw;
         
         //quickly grab everything from Customers table and display to show everything worked
         String query = "SELECT * FROM Customers";
