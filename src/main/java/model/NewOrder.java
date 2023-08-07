@@ -18,6 +18,9 @@ public class NewOrder {
         this.delivery = delivery;
         this.items = items;
         total = BigDecimal.ZERO;
+        for(NewOrderItem item : this.items) {
+            total = total.add(item.getSubtotal());
+        }
         orderDate = new AppCalender();
         orderStatus = "PENDING PAYMENT";
         this.LocationID = LocationID;
@@ -25,7 +28,7 @@ public class NewOrder {
     public String getInsertStatement() {
         StringBuilder result = new StringBuilder();
         result.append("START TRANSACTION;\n");
-        result.append("\tinsert into delivery (street, zipcode, deliverydate, DeliveryStatus)\n");
+        result.append("\tinsert into delivery (Street, ZIPCODE, DeliveryDate, DeliveryStatus)\n");
         result.append("\tVALUES\n");
         result.append("\t\t" + delivery.getFormattedValues() + ";\n");
         result.append("\tselect max(last_insert_id()) from delivery into @lastDeliveryID;\n");
@@ -39,8 +42,9 @@ public class NewOrder {
             for(int i = 0 ; i < items.size() - 1; i++) {
                 result.append("\t\t" + items.get(i).getFormattedValues() + ",\n");
             }
-            result.append("\t\t" + items.get(items.size() - 1).getFormattedValues() + ";");
+            result.append("\t\t" + items.get(items.size() - 1).getFormattedValues() + ";\n");
         }
+        result.append("COMMIT;");
         return result.toString();
     }
 

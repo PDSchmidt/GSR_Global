@@ -7,8 +7,10 @@ package view;
 import control.DatabaseManager;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,17 +18,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
-import model.Customer;
-import model.NewOrderItem;
-import model.NewOrderTableModel;
-import model.Product;
+
+import model.*;
 
 /**
  *
  * @author Paul
  */
 public class NewOrderPanel extends javax.swing.JPanel {
-    private Customer selected;
+    private Customer selectedCustomer;
     private DatabaseManager dbm;
     private Map<String,Customer> custs;
     private Map<String, Product> product;
@@ -44,7 +44,7 @@ public class NewOrderPanel extends javax.swing.JPanel {
         orderItems = new HashMap<>();
         Product.generateProducts(product, dbm);
         itemSelection =null;
-        selected = null;
+        selectedCustomer = null;
         initComponents();
         System.out.println("HERE");
     }
@@ -52,7 +52,7 @@ public class NewOrderPanel extends javax.swing.JPanel {
         orderItems.put(theItem.getID(), theItem);
         updateOrderTable();
     }
-    private void updateOrderTable() {
+    public void updateOrderTable() {
         JTable temp = OrderItemsTable;
         NewOrderTableModel model = new NewOrderTableModel();
         for(NewOrderItem item : orderItems.values()) {
@@ -62,8 +62,17 @@ public class NewOrderPanel extends javax.swing.JPanel {
         OrderItemsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         ItemsScrollPane.getViewport().remove(temp);
         ItemsScrollPane.getViewport().add(OrderItemsTable);
+        updateTotal();
         revalidate();
         repaint();
+    }
+    private void updateTotal() {
+        BigDecimal total = new BigDecimal("0.00");
+        for(NewOrderItem item : orderItems.values()) {
+            total = total.add(item.getSubtotal());
+        }
+        OrderSubtotalLabel.setText(NumberFormat.getCurrencyInstance().format(total));
+        OrderSubtotalLabel.setSize(133, 25);
     }
     private void populateComboBox(final ResultSet results) {
         CustomerComboBox.removeAllItems();
@@ -90,8 +99,8 @@ public class NewOrderPanel extends javax.swing.JPanel {
         }
     }
     private void updateCustomerInfoDisplay(final String theName) {
-        selected = custs.get(theName);
-        String[] attributes = selected.getAttributes();
+        selectedCustomer = custs.get(theName);
+        String[] attributes = selectedCustomer.getAttributes();
         CustFirstName.setText(attributes[0]);
         CustLastName.setText(attributes[1]);
         CustEmail.setText(attributes[2]);
@@ -150,7 +159,7 @@ public class NewOrderPanel extends javax.swing.JPanel {
         ItemsScrollPane = new javax.swing.JScrollPane();
         OrderItemsTable = new javax.swing.JTable();
         SubtotalLabel = new javax.swing.JLabel();
-        OrderSubtotalLabel = new javax.swing.JLabel();
+        OrderSubtotalLabel = new javax.swing.JTextField();
 
         CustSelectLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         CustSelectLabel.setText("Customer Selection");
@@ -235,6 +244,11 @@ public class NewOrderPanel extends javax.swing.JPanel {
         });
 
         EditItemButton.setText("Edit Selected");
+        EditItemButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditItemButtonActionPerformed(evt);
+            }
+        });
 
         AddItemButton.setText("Add Item");
         AddItemButton.addActionListener(new java.awt.event.ActionListener() {
@@ -272,16 +286,23 @@ public class NewOrderPanel extends javax.swing.JPanel {
         ItemsScrollPane.setViewportView(OrderItemsTable);
 
         SubtotalLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        SubtotalLabel.setText("      Total: $");
+        SubtotalLabel.setText("Total:   ");
 
         OrderSubtotalLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        OrderSubtotalLabel.setText("###,###,###.##");
+        OrderSubtotalLabel.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        OrderSubtotalLabel.setText("000,000,000.00");
+        OrderSubtotalLabel.setBorder(null);
+        OrderSubtotalLabel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OrderSubtotalLabelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout NewOrderPanelLayout = new javax.swing.GroupLayout(NewOrderPanel);
         NewOrderPanel.setLayout(NewOrderPanelLayout);
         NewOrderPanelLayout.setHorizontalGroup(
             NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(NewOrderPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NewOrderPanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING)
@@ -347,7 +368,7 @@ public class NewOrderPanel extends javax.swing.JPanel {
                                 .addGap(9, 9, 9)))
                         .addComponent(CustInfoLabel))
                     .addComponent(jSeparator3))
-                .addGap(18, 18, 18)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(OrderItemsLabel)
                     .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -357,15 +378,15 @@ public class NewOrderPanel extends javax.swing.JPanel {
                             .addComponent(EditItemButton)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(DeleteItemButton)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
+                            .addGap(313, 313, 313)
                             .addComponent(SubtotalLabel)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(OrderSubtotalLabel)
+                            .addComponent(OrderSubtotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(SubmitOrderButton))
                         .addComponent(ItemsScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(29, 29, 29))
         );
         NewOrderPanelLayout.setVerticalGroup(
             NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -438,8 +459,8 @@ public class NewOrderPanel extends javax.swing.JPanel {
                     .addComponent(DeleteItemButton)
                     .addComponent(SubmitOrderButton)
                     .addComponent(SubtotalLabel)
-                    .addComponent(OrderSubtotalLabel))
-                .addContainerGap(47, Short.MAX_VALUE))
+                    .addComponent(OrderSubtotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47))
         );
 
         CustomerComboBox.addItemListener(new ItemListener() {
@@ -451,6 +472,8 @@ public class NewOrderPanel extends javax.swing.JPanel {
             }
 
         });
+        OrderSubtotalLabel.setEditable(false);
+        OrderSubtotalLabel.setFocusable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -514,7 +537,14 @@ public class NewOrderPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_SearchForCustomerButtonActionPerformed
 
     private void DeleteItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteItemButtonActionPerformed
-        // TODO add your handling code here:
+        int row = OrderItemsTable.getSelectedRow();
+        if (row > -1) {
+            int selectedID = (int)OrderItemsTable.getModel().getValueAt(row, 0);
+            orderItems.remove(selectedID);
+            ((NewOrderTableModel)OrderItemsTable.getModel()).removeRow(row);
+            updateTotal();
+
+        }
     }//GEN-LAST:event_DeleteItemButtonActionPerformed
 
     private void AddItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddItemButtonActionPerformed
@@ -524,8 +554,48 @@ public class NewOrderPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_AddItemButtonActionPerformed
 
     private void SubmitOrderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitOrderButtonActionPerformed
-        // TODO add your handling code here:
+        if (selectedCustomer != null && !orderItems.isEmpty()) {
+            List<NewOrderItem> items = new ArrayList<>();
+            for(int productID : orderItems.keySet()) {
+                items.add(orderItems.get(productID));
+            }
+            NewOrder theOrder = new NewOrder(selectedCustomer.getID(), new NewDelivery(selectedCustomer.getZIPCODE(), selectedCustomer.getStreet()), 1, items);
+            boolean success = dbm.addNewOrder(theOrder);
+            if(success) {
+                System.out.println("ORDER ADDED TO DATABASE");
+                orderItems.clear();
+                updateOrderTable();
+                CustomerComboBox.removeAllItems();
+                custs.clear();
+                selectedCustomer = null;
+                CustFirstName.setText("");
+                CustLastName.setText("");
+                CustEmail.setText("");
+                CustStreet.setText("");
+                CustZip.setText("");
+                CustCity.setText("");
+                CustState.setText("");
+                CustPhone.setText("");
+            } else {
+                System.out.println("ERROR SUBMITTING ORDER");
+            }
+        }
     }//GEN-LAST:event_SubmitOrderButtonActionPerformed
+
+    private void EditItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditItemButtonActionPerformed
+        int row = OrderItemsTable.getSelectedRow();
+        if (row > -1) {
+            int selectedID = (int)OrderItemsTable.getModel().getValueAt(row, 0);
+            System.out.println(selectedID);
+            NewOrderItem selected = orderItems.get(selectedID);
+            EditOrderItemFrame editFrame = new EditOrderItemFrame(selected, this);
+        }
+
+    }//GEN-LAST:event_EditItemButtonActionPerformed
+
+    private void OrderSubtotalLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderSubtotalLabelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_OrderSubtotalLabelActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -556,7 +626,7 @@ public class NewOrderPanel extends javax.swing.JPanel {
     private javax.swing.JPanel NewOrderPanel;
     private javax.swing.JLabel OrderItemsLabel;
     private javax.swing.JTable OrderItemsTable;
-    private javax.swing.JLabel OrderSubtotalLabel;
+    private javax.swing.JTextField OrderSubtotalLabel;
     private javax.swing.JLabel PhoneLabel;
     private javax.swing.JButton SearchForCustomerButton;
     private javax.swing.JLabel StateLabel;

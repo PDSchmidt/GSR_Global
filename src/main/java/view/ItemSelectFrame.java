@@ -217,9 +217,10 @@ public class ItemSelectFrame extends javax.swing.JFrame {
             }
         });
         SpinnerNumberModel spinModel = (SpinnerNumberModel)QuantitySpinner.getModel();
-        spinModel.setMinimum(new Integer(0));
+        spinModel.setMinimum(new Integer(1));
+        spinModel.setValue(1);
 
-        CancelButton.setText("Cancel");
+        CancelButton.setText("Close");
         CancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CancelButtonActionPerformed(evt);

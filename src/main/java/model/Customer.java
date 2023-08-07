@@ -31,6 +31,12 @@ public class Customer {
         Phone = attributes[7];
         this.attributes = attributes;
     }
+    public String getZIPCODE() {
+        return this.ZIPCODE;
+    }
+    public String getStreet() {
+        return this.street;
+    }
     public int getID(){
         return cusID;
     }

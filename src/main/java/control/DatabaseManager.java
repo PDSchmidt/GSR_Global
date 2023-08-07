@@ -15,7 +15,7 @@ public class DatabaseManager {
     private String user;
     private String password;
     public DatabaseManager() {
-        url = "jdbc:mysql://localhost:3306/" + Credentials.db;
+        url = "jdbc:mysql://localhost:3306/" + Credentials.db + "?allowMultiQueries=true";
         user = Credentials.user;
         password = Credentials.pw;
         try {
@@ -26,18 +26,48 @@ public class DatabaseManager {
         }
     }
     public boolean addNewOrder(final NewOrder theOrder) {
-        boolean result = false;
-        ResultSet rs = null;
+        boolean result = true;
         int ID = -1;
         String query = theOrder.getInsertStatement();
-        try (Statement st = con.createStatement()) {
-            rs = st.executeQuery(query);
-        } catch (SQLException ex) {
-
+        boolean supports = false;
+        try {
+            supports = con.getMetaData().supportsBatchUpdates();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        if (rs != null) {
-            System.out.println("ORDER SUBMITTED");
-            result = true;
+        System.out.println("SUPPORTS BATCHES? : " + supports);
+        String[] batches = query.split(";");
+        for(int i = 0; i < batches.length; i++) {
+            batches[i] = batches[i] + ";";
+            System.out.print(batches[i]);
+        }
+        try {
+            con.setAutoCommit(false);
+        } catch (SQLException e) {
+            result = false;
+            throw new RuntimeException(e);
+        }
+        try (Statement st = con.createStatement()) {
+            System.out.println();
+            for(int i = 0; i < batches.length; i++) {
+                st.addBatch(batches[i]);
+                st.execute(batches[i]);
+                System.out.println("EXECUTED: "  + batches[i]);
+            }
+            con.commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            result = false;
+            try {
+                con.rollback();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            con.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return result;
     }

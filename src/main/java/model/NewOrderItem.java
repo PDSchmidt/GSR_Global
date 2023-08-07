@@ -21,4 +21,8 @@ public class NewOrderItem extends Product {
     public BigDecimal getSubtotal() {
         return this.subtotal;
     }
+    public void setQuantity(final int newQuantity) {
+        quantity = newQuantity;
+        subtotal = new BigDecimal(quantity).multiply(this.getUP());
+    }
 }

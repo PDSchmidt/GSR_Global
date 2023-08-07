@@ -1,10 +1,15 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
-public class AppCalender extends GregorianCalendar {
+public class AppCalender {
+    LocalDate date;
+    public AppCalender() {
+        this.date = LocalDate.now();
+
+    }
     public String getFormatted() {
-        return this.YEAR + "-" +
-                this.MONTH + "-" + this.DAY_OF_MONTH;
+        return date.toString();
     }
 }
