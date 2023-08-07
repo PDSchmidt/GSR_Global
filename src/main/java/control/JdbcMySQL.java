@@ -46,10 +46,10 @@ public class JdbcMySQL {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query)) {
             System.out.println("CONNECTION OK");
-            ResultSetMetaData resultMeta = rs.getMetaData();
-            int columns = resultMeta.getColumnCount();
+            ResultSetMetaData rsMetaData = rs.getMetaData();
+            int columns = rsMetaData.getColumnCount();
             for (int i = 1; i <= columns; i++) {
-                System.out.print(resultMeta.getColumnName(i) + ", ");
+                System.out.print(rsMetaData.getColumnName(i) + ", ");
             }
             System.out.println();
             while (rs.next()) {

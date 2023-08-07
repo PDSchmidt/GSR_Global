@@ -6,6 +6,8 @@ package view;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import control.DatabaseManager;
+
 import java.awt.EventQueue;
 
 
@@ -16,11 +18,13 @@ import java.awt.EventQueue;
 public class MainFrame extends javax.swing.JFrame {
     private String currentTheme;
     private MainFrame myRef;
+    private DatabaseManager dbm;
     /**
      * Creates new form NewJFrame
      */
-    public MainFrame( final String theme) {
+    public MainFrame( final String theme, final DatabaseManager dbm) {
         currentTheme = theme;
+        this.dbm = dbm;
         myRef = this;
         initComponents();
     }

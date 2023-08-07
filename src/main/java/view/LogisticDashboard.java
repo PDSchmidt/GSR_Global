@@ -4,16 +4,19 @@
  */
 package view;
 
+import control.DatabaseManager;
+
 /**
  *
  * @author Paul
  */
 public class LogisticDashboard extends javax.swing.JPanel {
-
+    private DatabaseManager dbm;
     /**
      * Creates new form LogisticDashboard
      */
-    public LogisticDashboard() {
+    public LogisticDashboard(final DatabaseManager dbm) {
+        this.dbm = dbm;
         initComponents();
     }
 
@@ -27,244 +30,16 @@ public class LogisticDashboard extends javax.swing.JPanel {
     private void initComponents() {
 
         LogisticsTabbedPanel = new javax.swing.JTabbedPane();
-        ActiveOrderPanel = new javax.swing.JPanel();
-        ActiveOrdersScrollPane = new javax.swing.JScrollPane();
-        ActiveOrdersTable = new javax.swing.JTable();
-        ApplyFiltersActiveButton = new javax.swing.JButton();
-        ResetFiltersActiveButton = new javax.swing.JButton();
-        ClosedOrdersPanel = new javax.swing.JPanel();
-        ClosedOrdersScrollPane = new javax.swing.JScrollPane();
-        ClosedOrdersTable = new javax.swing.JTable();
-        ApplyFiltersClosedButton = new javax.swing.JButton();
-        ResetFiltersClosedButton = new javax.swing.JButton();
-        InventoryPanel = new javax.swing.JPanel();
-        InventoryScrollPane = new javax.swing.JScrollPane();
-        InventoryTable = new javax.swing.JTable();
-        ApplyFiltersInventoryButton = new javax.swing.JButton();
-        ResetFiltersInventoryButton = new javax.swing.JButton();
-        VendorsPanel = new javax.swing.JPanel();
-        NewVendorButton = new javax.swing.JButton();
-        EditVendorButton = new javax.swing.JButton();
-        VendorsScrollPane = new javax.swing.JScrollPane();
-        VendorsTable = new javax.swing.JTable();
+        InventoryPanel = new InventoryPanel(dbm);
+        ActiveOrdersPanel = new OrderPanel("ACTIVE", dbm);
+        ClosedOrdersPanel = new OrderPanel("CLOSED", dbm);
+        VendorsPanel = new VendorPanel(dbm);
 
         setMinimumSize(new java.awt.Dimension(1280, 720));
 
-        ActiveOrdersTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "OrderID", "CustomerID", "OrderDate", "OrderStatus", "TotalCost"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        ActiveOrdersScrollPane.setViewportView(ActiveOrdersTable);
-
-        ApplyFiltersActiveButton.setText("Apply Filters...");
-
-        ResetFiltersActiveButton.setText("Reset Filters");
-
-        javax.swing.GroupLayout ActiveOrderPanelLayout = new javax.swing.GroupLayout(ActiveOrderPanel);
-        ActiveOrderPanel.setLayout(ActiveOrderPanelLayout);
-        ActiveOrderPanelLayout.setHorizontalGroup(
-            ActiveOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ActiveOrderPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(ActiveOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ActiveOrdersScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(ActiveOrderPanelLayout.createSequentialGroup()
-                        .addComponent(ApplyFiltersActiveButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ResetFiltersActiveButton)))
-                .addContainerGap(28, Short.MAX_VALUE))
-        );
-        ActiveOrderPanelLayout.setVerticalGroup(
-            ActiveOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ActiveOrderPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(ActiveOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ApplyFiltersActiveButton)
-                    .addComponent(ResetFiltersActiveButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ActiveOrdersScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
-        );
-
-        LogisticsTabbedPanel.addTab("Active Orders", ActiveOrderPanel);
-
-        ClosedOrdersTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "OrderID", "CustomerID", "OrderDate", "DeliverDate", "TotalCost"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        ClosedOrdersScrollPane.setViewportView(ClosedOrdersTable);
-
-        ApplyFiltersClosedButton.setText("Apply Filters...");
-
-        ResetFiltersClosedButton.setText("Reset Filters");
-
-        javax.swing.GroupLayout ClosedOrdersPanelLayout = new javax.swing.GroupLayout(ClosedOrdersPanel);
-        ClosedOrdersPanel.setLayout(ClosedOrdersPanelLayout);
-        ClosedOrdersPanelLayout.setHorizontalGroup(
-            ClosedOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ClosedOrdersPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(ClosedOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ClosedOrdersScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(ClosedOrdersPanelLayout.createSequentialGroup()
-                        .addComponent(ApplyFiltersClosedButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ResetFiltersClosedButton)))
-                .addContainerGap(28, Short.MAX_VALUE))
-        );
-        ClosedOrdersPanelLayout.setVerticalGroup(
-            ClosedOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ClosedOrdersPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(ClosedOrdersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ApplyFiltersClosedButton)
-                    .addComponent(ResetFiltersClosedButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ClosedOrdersScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
-        );
-
-        LogisticsTabbedPanel.addTab("Closed Orders", ClosedOrdersPanel);
-
-        InventoryTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "PartNumber", "PartName", "PartDescription", "Cost", "Stock", "Required"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        InventoryScrollPane.setViewportView(InventoryTable);
-
-        ApplyFiltersInventoryButton.setText("Apply Filters...");
-
-        ResetFiltersInventoryButton.setText("Reset Filters");
-
-        javax.swing.GroupLayout InventoryPanelLayout = new javax.swing.GroupLayout(InventoryPanel);
-        InventoryPanel.setLayout(InventoryPanelLayout);
-        InventoryPanelLayout.setHorizontalGroup(
-            InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(InventoryPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(InventoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(InventoryPanelLayout.createSequentialGroup()
-                        .addComponent(ApplyFiltersInventoryButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ResetFiltersInventoryButton)))
-                .addContainerGap(28, Short.MAX_VALUE))
-        );
-        InventoryPanelLayout.setVerticalGroup(
-            InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(InventoryPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ApplyFiltersInventoryButton)
-                    .addComponent(ResetFiltersInventoryButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(InventoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
-        );
-
         LogisticsTabbedPanel.addTab("Inventory", InventoryPanel);
-
-        NewVendorButton.setText("New Vendor");
-        NewVendorButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NewVendorButtonActionPerformed(evt);
-            }
-        });
-
-        EditVendorButton.setText("Edit Selected");
-
-        VendorsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "VendorID", "Name", "Email", "Address", "Phone"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        VendorsScrollPane.setViewportView(VendorsTable);
-
-        javax.swing.GroupLayout VendorsPanelLayout = new javax.swing.GroupLayout(VendorsPanel);
-        VendorsPanel.setLayout(VendorsPanelLayout);
-        VendorsPanelLayout.setHorizontalGroup(
-            VendorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(VendorsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(VendorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(VendorsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(VendorsPanelLayout.createSequentialGroup()
-                        .addComponent(NewVendorButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(EditVendorButton)))
-                .addContainerGap(28, Short.MAX_VALUE))
-        );
-        VendorsPanelLayout.setVerticalGroup(
-            VendorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(VendorsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(VendorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(NewVendorButton)
-                    .addComponent(EditVendorButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(VendorsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
-        );
-
+        LogisticsTabbedPanel.addTab("Active Orders", ActiveOrdersPanel);
+        LogisticsTabbedPanel.addTab("Closed Orders", ClosedOrdersPanel);
         LogisticsTabbedPanel.addTab("Vendors", VendorsPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -290,26 +65,10 @@ public class LogisticDashboard extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel ActiveOrderPanel;
-    private javax.swing.JScrollPane ActiveOrdersScrollPane;
-    private javax.swing.JTable ActiveOrdersTable;
-    private javax.swing.JButton ApplyFiltersActiveButton;
-    private javax.swing.JButton ApplyFiltersClosedButton;
-    private javax.swing.JButton ApplyFiltersInventoryButton;
-    private javax.swing.JPanel ClosedOrdersPanel;
-    private javax.swing.JScrollPane ClosedOrdersScrollPane;
-    private javax.swing.JTable ClosedOrdersTable;
-    private javax.swing.JButton EditVendorButton;
-    private javax.swing.JPanel InventoryPanel;
-    private javax.swing.JScrollPane InventoryScrollPane;
-    private javax.swing.JTable InventoryTable;
+    private view.OrderPanel ActiveOrdersPanel;
+    private view.OrderPanel ClosedOrdersPanel;
+    private view.InventoryPanel InventoryPanel;
     private javax.swing.JTabbedPane LogisticsTabbedPanel;
-    private javax.swing.JButton NewVendorButton;
-    private javax.swing.JButton ResetFiltersActiveButton;
-    private javax.swing.JButton ResetFiltersClosedButton;
-    private javax.swing.JButton ResetFiltersInventoryButton;
-    private javax.swing.JPanel VendorsPanel;
-    private javax.swing.JScrollPane VendorsScrollPane;
-    private javax.swing.JTable VendorsTable;
+    private view.VendorPanel VendorsPanel;
     // End of variables declaration//GEN-END:variables
 }
