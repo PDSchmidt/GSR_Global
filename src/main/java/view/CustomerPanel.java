@@ -90,6 +90,8 @@ public class CustomerPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        CustomersTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        CustomersTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         CustomerManagementScrollPane.setViewportView(CustomersTable);
 
         javax.swing.GroupLayout CustomerManagementPanelLayout = new javax.swing.GroupLayout(CustomerManagementPanel);

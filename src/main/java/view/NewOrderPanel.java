@@ -11,13 +11,10 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTable;
+import javax.swing.*;
 
 import model.*;
 
@@ -27,9 +24,11 @@ import model.*;
  */
 public class NewOrderPanel extends javax.swing.JPanel {
     private Customer selectedCustomer;
+    private StoreLocation selectedStore;
     private DatabaseManager dbm;
     private Map<String,Customer> custs;
     private Map<String, Product> product;
+    private Map<String, StoreLocation> stores;
     private ItemSelectFrame itemSelection;
     private Map<Integer, NewOrderItem> orderItems;
     /**
@@ -42,10 +41,17 @@ public class NewOrderPanel extends javax.swing.JPanel {
         this.dbm = dbm;
         product = new HashMap<>();
         orderItems = new HashMap<>();
+        stores = new HashMap<>();
         Product.generateProducts(product, dbm);
         itemSelection =null;
         selectedCustomer = null;
+        selectedStore = null;
         initComponents();
+        try {
+            populateStoreComboBox();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("HERE");
     }
     public void addOrderItem(NewOrderItem theItem) {
@@ -73,6 +79,38 @@ public class NewOrderPanel extends javax.swing.JPanel {
         }
         OrderSubtotalLabel.setText(NumberFormat.getCurrencyInstance().format(total));
         OrderSubtotalLabel.setSize(133, 25);
+    }
+    private void populateStoreComboBox() throws SQLException {
+        StoreLocationComboBox.removeAllItems();
+        String query = "select * from storelocations natural join zip;";
+        ResultSet rs = null;
+        try {
+            rs = dbm.executeQuery(query);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        if(rs != null) {
+            while(rs.next()) {
+                int id = rs.getInt("LocationID");
+                String[] attr = new String[6];
+                attr[0] = rs.getString("LocationName");
+                attr[1] = rs.getString("Street");
+                attr[2] = rs.getString("ZIPCODE");
+                attr[3] = rs.getString("Phone");
+                attr[4] = rs.getString("City");
+                attr[5] = rs.getString("State");
+                StoreLocation curr = new StoreLocation(id, attr);
+                stores.put(curr.getStoreName(), curr);
+            }
+        }
+        List<String> locnames = new ArrayList<>();
+        for(String name : stores.keySet()) {
+            locnames.add(name);
+        }
+        Collections.sort(locnames);
+        for (int i = 0; i < locnames.size(); i++) {
+            StoreLocationComboBox.addItem(locnames.get(i));
+        }
     }
     private void populateComboBox(final ResultSet results) {
         CustomerComboBox.removeAllItems();
@@ -109,6 +147,15 @@ public class NewOrderPanel extends javax.swing.JPanel {
         CustCity.setText(attributes[5]);
         CustState.setText(attributes[6]);
         CustPhone.setText(attributes[7]);
+    }
+    private void updateLocationInfoDisplay(final String theName) {
+        selectedStore = stores.get(theName);
+        StoreNameLabel.setText(selectedStore.getStoreName());
+        StoreStreetLabel.setText(selectedStore.getStreet());
+        StoreZIPCODELabel.setText(selectedStore.getZIPCODE());
+        StoreCityLabel.setText(selectedStore.getCity());
+        StoreStateLabel.setText(selectedStore.getState());
+        StorePhoneLabel.setText(selectedStore.getPhone());
     }
 
     /**
@@ -160,6 +207,28 @@ public class NewOrderPanel extends javax.swing.JPanel {
         OrderItemsTable = new javax.swing.JTable();
         SubtotalLabel = new javax.swing.JLabel();
         OrderSubtotalLabel = new javax.swing.JTextField();
+        jSeparator6 = new javax.swing.JSeparator();
+        StoreLocationComboBox = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        CustSelectLabel1 = new javax.swing.JLabel();
+        jSeparator7 = new javax.swing.JSeparator();
+        CustFirstNameLabel1 = new javax.swing.JLabel();
+        CustInfoLabel1 = new javax.swing.JLabel();
+        jSeparator8 = new javax.swing.JSeparator();
+        jSeparator9 = new javax.swing.JSeparator();
+        StoreNameLabel = new javax.swing.JLabel();
+        PhoneLabel1 = new javax.swing.JLabel();
+        StorePhoneLabel = new javax.swing.JLabel();
+        jSeparator10 = new javax.swing.JSeparator();
+        AddressLabel1 = new javax.swing.JLabel();
+        StreetLabel1 = new javax.swing.JLabel();
+        StoreStreetLabel = new javax.swing.JLabel();
+        StoreCityLabel = new javax.swing.JLabel();
+        CityLabel1 = new javax.swing.JLabel();
+        StateLabel1 = new javax.swing.JLabel();
+        StoreStateLabel = new javax.swing.JLabel();
+        ZipLabel1 = new javax.swing.JLabel();
+        StoreZIPCODELabel = new javax.swing.JLabel();
 
         CustSelectLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         CustSelectLabel.setText("Customer Selection");
@@ -290,7 +359,7 @@ public class NewOrderPanel extends javax.swing.JPanel {
 
         OrderSubtotalLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         OrderSubtotalLabel.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        OrderSubtotalLabel.setText("000,000,000.00");
+        OrderSubtotalLabel.setText("$0.00");
         OrderSubtotalLabel.setBorder(null);
         OrderSubtotalLabel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -298,77 +367,160 @@ public class NewOrderPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("Select a location:");
+
+        CustSelectLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        CustSelectLabel1.setText("Fulfilment Selection");
+
+        CustFirstNameLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        CustFirstNameLabel1.setText("Name:");
+
+        CustInfoLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        CustInfoLabel1.setText("Store Info");
+
+        StoreNameLabel.setText("(none selected)");
+
+        PhoneLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        PhoneLabel1.setText("Phone:");
+
+        StorePhoneLabel.setText("(###-###-####)");
+
+        AddressLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        AddressLabel1.setText("Address");
+
+        StreetLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        StreetLabel1.setText("Street:");
+
+        StoreStreetLabel.setText("(street address-----------------------)");
+
+        StoreCityLabel.setText("(city---------)");
+
+        CityLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        CityLabel1.setText("City:");
+
+        StateLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        StateLabel1.setText("| State:");
+
+        StoreStateLabel.setText("##");
+
+        ZipLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        ZipLabel1.setText("| ZIP:");
+
+        StoreZIPCODELabel.setText("#####");
+
         javax.swing.GroupLayout NewOrderPanelLayout = new javax.swing.GroupLayout(NewOrderPanel);
         NewOrderPanel.setLayout(NewOrderPanelLayout);
         NewOrderPanelLayout.setHorizontalGroup(
             NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NewOrderPanelLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jSeparator2)
-                            .addComponent(jSeparator1)
-                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                        .addComponent(jSeparator8, javax.swing.GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(CustSelectLabel)
-                                    .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(FirstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(FirstNameLabel)
-                                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                                .addGap(21, 21, 21)
-                                                .addComponent(SearchForCustomerButton)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(CustomerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(LastNameLabel)
-                                            .addComponent(LastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(CustFirstNameLabel)
-                                            .addComponent(CustFirstName))
-                                        .addGap(48, 48, 48)
-                                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(CustLastName)
-                                            .addComponent(CustLastNameLabel)))
-                                    .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                        .addComponent(PhoneLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(CustPhone))
-                                    .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(AddressLabel)
-                                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                                .addGap(6, 6, 6)
-                                                .addComponent(StreetLabel)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(CustStreet, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                                .addComponent(EmailLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(CustEmail))
-                                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                                                .addGap(12, 12, 12)
-                                                .addComponent(CityLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(CustCity, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(StateLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(CustState)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(ZipLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(CustZip)))))
-                                .addGap(9, 9, 9)))
-                        .addComponent(CustInfoLabel))
-                    .addComponent(jSeparator3))
-                .addGap(18, 18, Short.MAX_VALUE)
+                                    .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jSeparator2)
+                                        .addComponent(jSeparator1)
+                                        .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                            .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(CustSelectLabel)
+                                                .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                                    .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(FirstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(FirstNameLabel)
+                                                        .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                                            .addGap(21, 21, 21)
+                                                            .addComponent(SearchForCustomerButton)))
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(CustomerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(LastNameLabel)
+                                                        .addComponent(LastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                                    .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(CustFirstNameLabel)
+                                                        .addComponent(CustFirstName))
+                                                    .addGap(48, 48, 48)
+                                                    .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(CustLastName)
+                                                        .addComponent(CustLastNameLabel)))
+                                                .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                                    .addComponent(PhoneLabel)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(CustPhone))
+                                                .addComponent(AddressLabel)
+                                                .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                                    .addGap(6, 6, 6)
+                                                    .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                                            .addComponent(EmailLabel)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(CustEmail))
+                                                        .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                                            .addGap(12, 12, 12)
+                                                            .addComponent(CityLabel)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(CustCity, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(StateLabel)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(CustState)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(ZipLabel)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(CustZip))
+                                                        .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                                            .addComponent(StreetLabel)
+                                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(CustStreet, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addGap(12, 12, 12)))
+                                    .addComponent(CustInfoLabel))
+                                .addComponent(jSeparator3)
+                                .addComponent(jSeparator6)
+                                .addComponent(jSeparator7)
+                                .addComponent(jSeparator9)
+                                .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(CustSelectLabel1)
+                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(StoreLocationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(CustInfoLabel1)
+                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                .addComponent(CustFirstNameLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(StoreNameLabel))
+                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                .addComponent(PhoneLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(StorePhoneLabel))
+                            .addComponent(AddressLabel1))
+                        .addGap(18, 18, Short.MAX_VALUE))
+                    .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(StreetLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(StoreStreetLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(CityLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(StoreCityLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(StateLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(StoreStateLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ZipLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(StoreZIPCODELabel)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(OrderItemsLabel)
                     .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -378,10 +530,10 @@ public class NewOrderPanel extends javax.swing.JPanel {
                             .addComponent(EditItemButton)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(DeleteItemButton)
-                            .addGap(313, 313, 313)
-                            .addComponent(SubtotalLabel)
+                            .addGap(307, 307, 307)
+                            .addComponent(SubtotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(OrderSubtotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(OrderSubtotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(SubmitOrderButton))
                         .addComponent(ItemsScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,64 +554,106 @@ public class NewOrderPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(NewOrderPanelLayout.createSequentialGroup()
-                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(FirstNameLabel)
-                            .addComponent(LastNameLabel))
+                        .addComponent(ItemsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(FirstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(LastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(7, 7, 7)
+                            .addComponent(AddItemButton)
+                            .addComponent(EditItemButton)
+                            .addComponent(DeleteItemButton)
+                            .addComponent(SubmitOrderButton)
+                            .addComponent(SubtotalLabel)
+                            .addComponent(OrderSubtotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(NewOrderPanelLayout.createSequentialGroup()
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(FirstNameLabel)
+                                    .addComponent(LastNameLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(FirstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(LastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(7, 7, 7)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(CustomerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(SearchForCustomerButton))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(CustInfoLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(CustFirstNameLabel)
+                                    .addComponent(CustLastNameLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(CustFirstName)
+                                    .addComponent(CustLastName))
+                                .addGap(9, 9, 9)
+                                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(EmailLabel)
+                                    .addComponent(CustEmail))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(PhoneLabel)
+                                    .addComponent(CustPhone))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(2, 2, 2)
+                                .addComponent(AddressLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(StreetLabel)
+                                    .addComponent(CustStreet))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(CityLabel)
+                                    .addComponent(CustCity)
+                                    .addComponent(StateLabel)
+                                    .addComponent(CustState)
+                                    .addComponent(ZipLabel)
+                                    .addComponent(CustZip))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(CustSelectLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(StoreLocationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(8, 8, 8)
+                                .addComponent(CustInfoLabel1)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(CustomerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SearchForCustomerButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(CustInfoLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(CustFirstNameLabel1)
+                            .addComponent(StoreNameLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(CustFirstNameLabel)
-                            .addComponent(CustLastNameLabel))
+                            .addComponent(PhoneLabel1)
+                            .addComponent(StorePhoneLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(CustFirstName)
-                            .addComponent(CustLastName))
-                        .addGap(9, 9, 9)
-                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(EmailLabel)
-                            .addComponent(CustEmail))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(PhoneLabel)
-                            .addComponent(CustPhone))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)
-                        .addComponent(AddressLabel)
+                        .addComponent(AddressLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(StreetLabel)
-                            .addComponent(CustStreet))
+                            .addComponent(StoreStreetLabel)
+                            .addComponent(StreetLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(CityLabel)
-                            .addComponent(CustCity)
-                            .addComponent(StateLabel)
-                            .addComponent(CustState)
-                            .addComponent(ZipLabel)
-                            .addComponent(CustZip)))
-                    .addComponent(ItemsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(NewOrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddItemButton)
-                    .addComponent(EditItemButton)
-                    .addComponent(DeleteItemButton)
-                    .addComponent(SubmitOrderButton)
-                    .addComponent(SubtotalLabel)
-                    .addComponent(OrderSubtotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(CityLabel1)
+                            .addComponent(StoreCityLabel)
+                            .addComponent(StateLabel1)
+                            .addComponent(StoreStateLabel)
+                            .addComponent(ZipLabel1)
+                            .addComponent(StoreZIPCODELabel))))
                 .addGap(47, 47, 47))
         );
 
@@ -474,26 +668,31 @@ public class NewOrderPanel extends javax.swing.JPanel {
         });
         OrderSubtotalLabel.setEditable(false);
         OrderSubtotalLabel.setFocusable(false);
+        StoreLocationComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent arg) {
+                if(arg.getStateChange() == ItemEvent.SELECTED) {
+                    System.out.println((String)arg.getItem());
+                    updateLocationInfoDisplay((String)arg.getItem());
+                }
+            }
+
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1282, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(NewOrderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(NewOrderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 689, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(NewOrderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(NewOrderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -554,12 +753,12 @@ public class NewOrderPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_AddItemButtonActionPerformed
 
     private void SubmitOrderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitOrderButtonActionPerformed
-        if (selectedCustomer != null && !orderItems.isEmpty()) {
+        if (selectedCustomer != null && selectedStore != null && !orderItems.isEmpty()) {
             List<NewOrderItem> items = new ArrayList<>();
             for(int productID : orderItems.keySet()) {
                 items.add(orderItems.get(productID));
             }
-            NewOrder theOrder = new NewOrder(selectedCustomer.getID(), new NewDelivery(selectedCustomer.getZIPCODE(), selectedCustomer.getStreet()), 1, items);
+            NewOrder theOrder = new NewOrder(selectedCustomer.getID(), new NewDelivery(selectedCustomer.getZIPCODE(), selectedCustomer.getStreet()), selectedStore.getStoreID(), items);
             boolean success = dbm.addNewOrder(theOrder);
             if(success) {
                 System.out.println("ORDER ADDED TO DATABASE");
@@ -576,6 +775,7 @@ public class NewOrderPanel extends javax.swing.JPanel {
                 CustCity.setText("");
                 CustState.setText("");
                 CustPhone.setText("");
+                JOptionPane.showMessageDialog(this,"Order Submitted Successfully!");
             } else {
                 System.out.println("ERROR SUBMITTING ORDER");
             }
@@ -601,16 +801,21 @@ public class NewOrderPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddItemButton;
     private javax.swing.JLabel AddressLabel;
+    private javax.swing.JLabel AddressLabel1;
     private javax.swing.JLabel CityLabel;
+    private javax.swing.JLabel CityLabel1;
     private javax.swing.JLabel CustCity;
     private javax.swing.JLabel CustEmail;
     private javax.swing.JLabel CustFirstName;
     private javax.swing.JLabel CustFirstNameLabel;
+    private javax.swing.JLabel CustFirstNameLabel1;
     private javax.swing.JLabel CustInfoLabel;
+    private javax.swing.JLabel CustInfoLabel1;
     private javax.swing.JLabel CustLastName;
     private javax.swing.JLabel CustLastNameLabel;
     private javax.swing.JLabel CustPhone;
     private javax.swing.JLabel CustSelectLabel;
+    private javax.swing.JLabel CustSelectLabel1;
     private javax.swing.JLabel CustState;
     private javax.swing.JLabel CustStreet;
     private javax.swing.JLabel CustZip;
@@ -628,16 +833,33 @@ public class NewOrderPanel extends javax.swing.JPanel {
     private javax.swing.JTable OrderItemsTable;
     private javax.swing.JTextField OrderSubtotalLabel;
     private javax.swing.JLabel PhoneLabel;
+    private javax.swing.JLabel PhoneLabel1;
     private javax.swing.JButton SearchForCustomerButton;
     private javax.swing.JLabel StateLabel;
+    private javax.swing.JLabel StateLabel1;
+    private javax.swing.JLabel StoreCityLabel;
+    private javax.swing.JComboBox<String> StoreLocationComboBox;
+    private javax.swing.JLabel StoreNameLabel;
+    private javax.swing.JLabel StorePhoneLabel;
+    private javax.swing.JLabel StoreStateLabel;
+    private javax.swing.JLabel StoreStreetLabel;
+    private javax.swing.JLabel StoreZIPCODELabel;
     private javax.swing.JLabel StreetLabel;
+    private javax.swing.JLabel StreetLabel1;
     private javax.swing.JButton SubmitOrderButton;
     private javax.swing.JLabel SubtotalLabel;
     private javax.swing.JLabel ZipLabel;
+    private javax.swing.JLabel ZipLabel1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JSeparator jSeparator7;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JSeparator jSeparator9;
     // End of variables declaration//GEN-END:variables
 }

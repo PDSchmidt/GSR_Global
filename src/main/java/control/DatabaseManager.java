@@ -94,7 +94,9 @@ public class DatabaseManager {
             j++;
         }
         ResultTableModel model = new ResultTableModel(data, attributes, row);
-        return new JTable(model);
+        JTable table = new JTable(model);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        return table;
     }
     public ResultSet executeQuery(final String query) throws SQLException {
         Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

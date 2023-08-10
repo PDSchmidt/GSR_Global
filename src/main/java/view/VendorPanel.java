@@ -91,6 +91,8 @@ public class VendorPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        VendorsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        VendorsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         VendorsScrollPane.setViewportView(VendorsTable);
 
         javax.swing.GroupLayout VendorsPanelLayout = new javax.swing.GroupLayout(VendorsPanel);

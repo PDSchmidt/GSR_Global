@@ -106,6 +106,8 @@ public class OrderPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        OrdersTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        OrdersTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         OrdersScrollPane.setViewportView(OrdersTable);
 
         ApplyFiltersButton.setText("Apply Filters...");

@@ -81,6 +81,8 @@ public class InventoryPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        InventoryTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        InventoryTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         InventoryScrollPane.setViewportView(InventoryTable);
 
         ApplyFiltersInventoryButton.setText("Apply Filters...");
