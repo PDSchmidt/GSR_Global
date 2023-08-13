@@ -5,6 +5,8 @@
 package view;
 
 
+import view.inventorydb.LogisticDashboard;
+import view.orderdb.OrderDashboard;
 import control.DatabaseManager;
 
 /**

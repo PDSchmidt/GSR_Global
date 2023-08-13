@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package view;
+package view.inventorydb;
 
+import view.orderdb.OrderPanel;
 import control.DatabaseManager;
 
 /**
@@ -65,10 +66,10 @@ public class LogisticDashboard extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private view.OrderPanel ActiveOrdersPanel;
-    private view.OrderPanel ClosedOrdersPanel;
-    private view.InventoryPanel InventoryPanel;
+    private view.orderdb.OrderPanel ActiveOrdersPanel;
+    private view.orderdb.OrderPanel ClosedOrdersPanel;
+    private view.inventorydb.InventoryPanel InventoryPanel;
     private javax.swing.JTabbedPane LogisticsTabbedPanel;
-    private view.VendorPanel VendorsPanel;
+    private view.inventorydb.VendorPanel VendorsPanel;
     // End of variables declaration//GEN-END:variables
 }

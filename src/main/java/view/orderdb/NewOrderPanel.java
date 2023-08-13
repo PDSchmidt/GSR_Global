@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package view;
+package view.orderdb;
 
 import control.DatabaseManager;
 import java.awt.event.ItemEvent;
@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import model.*;
+import model.entity.*;
 
 /**
  *

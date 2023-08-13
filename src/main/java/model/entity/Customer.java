@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model;
+package model.entity;
 
 /**
  *
@@ -36,6 +36,24 @@ public class Customer {
     }
     public String getStreet() {
         return this.street;
+    }
+    public String getCity() {
+        return this.city;
+    }
+    public String getState() {
+        return this.state;
+    }
+    public String getPhone() {
+        return this.Phone;
+    }
+    public String getFirst() {
+        return this.first;
+    }
+    public String getLast() {
+        return this.last;
+    }
+    public String getEmail() {
+        return this.email;
     }
     public int getID(){
         return cusID;

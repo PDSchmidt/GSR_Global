@@ -2,21 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package view;
+package view.orderdb;
 
+import view.orderdb.CustomerPanel;
 import control.DatabaseManager;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.Customer;
-import model.Product;
 
 /**
  *
@@ -63,10 +52,10 @@ public class OrderDashboard extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private view.OrderPanel ActiveOrderPanel;
-    private view.OrderPanel ClosedOrderPanel;
-    private view.CustomerPanel CustomersPanel;
-    private view.NewOrderPanel NewOrderPanel;
+    private view.orderdb.OrderPanel ActiveOrderPanel;
+    private view.orderdb.OrderPanel ClosedOrderPanel;
+    private view.orderdb.CustomerPanel CustomersPanel;
+    private view.orderdb.NewOrderPanel NewOrderPanel;
     private javax.swing.JTabbedPane OrdersTabbedPane;
     // End of variables declaration//GEN-END:variables
 }

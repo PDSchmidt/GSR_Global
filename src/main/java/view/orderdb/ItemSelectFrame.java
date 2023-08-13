@@ -2,11 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package view;
+package view.orderdb;
 
 import control.DatabaseManager;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -16,15 +15,14 @@ import java.util.Map;
 import java.util.Vector;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
-import javax.swing.ListModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.DefaultFormatter;
-import model.NewOrderItem;
-import model.Product;
+import model.entity.NewOrderItem;
+import model.entity.Product;
 
 /**
  *

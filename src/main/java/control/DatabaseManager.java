@@ -2,7 +2,8 @@ package control;
 
 
 import Testing.ResultTableModel;
-import model.NewOrder;
+import model.entity.Customer;
+import model.entity.NewOrder;
 
 import javax.swing.*;
 import java.sql.*;
@@ -15,7 +16,7 @@ public class DatabaseManager {
     private String user;
     private String password;
     public DatabaseManager() {
-        url = "jdbc:mysql://localhost:3306/" + Credentials.db + "?allowMultiQueries=true";
+        url = "jdbc:mysql://tcss445.mysql.database.azure.com/" + Credentials.db + "?allowMultiQueries=true";
         user = Credentials.user;
         password = Credentials.pw;
         try {
@@ -24,6 +25,62 @@ public class DatabaseManager {
             Logger lgr = Logger.getLogger(JdbcMySQL.class.getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
         }
+    }
+    private boolean zipExistsAlready(final String theZip) throws SQLException {
+        boolean result = true;
+        String query = "select if(exists(select * from zip where zipcode = ?), true, false)";
+        PreparedStatement statement = con.prepareStatement(query);
+        statement.setString(1, theZip);
+        ResultSet rs = statement.executeQuery();
+        int exists = -1;
+        if(rs.next()) {
+            exists = rs.getInt(1);
+        }
+        if (exists == 0) {
+            result = false;
+        }
+        return result;
+    }
+    public boolean addNewCustomer(final Customer theCust) {
+        boolean result = true;
+        String zipQ = "insert into zip (ZIPCODE, City, State) VALUES (?, ?, ?)";
+        String customerQ = "insert into customers (FirstName, LastName, Email, Street, Phone, ZIPCODE)" +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement zip = con.prepareStatement(zipQ);
+            PreparedStatement customer = con.prepareStatement(customerQ);
+            if(!zipExistsAlready(theCust.getZIPCODE())) {
+                try {
+                    zip.setString(1, theCust.getZIPCODE());
+                    zip.setString(2, theCust.getCity());
+                    zip.setString(3, theCust.getState());
+                    zip.executeUpdate();
+                } catch(SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println(ex.getSQLState());
+                    result = false;
+                }
+            }
+            if(result) {
+                try {
+                    customer.setString(1, theCust.getFirst());
+                    customer.setString(2, theCust.getLast());
+                    customer.setString(3, theCust.getEmail());
+                    customer.setString(4, theCust.getStreet());
+                    customer.setString(5, theCust.getPhone());
+                    customer.setString(6, theCust.getZIPCODE());
+                    customer.executeUpdate();
+                } catch (SQLException ex) {
+                    result = false;
+                    ex.printStackTrace();
+                }
+            }
+
+        } catch (SQLException e) {
+            result =false;
+            e.printStackTrace();
+        }
+        return result;
     }
     public boolean addNewOrder(final NewOrder theOrder) {
         boolean result = true;

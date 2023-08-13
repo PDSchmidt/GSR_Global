@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package view;
+package view.orderdb;
 
 import control.DatabaseManager;
 import java.sql.SQLException;
@@ -14,6 +14,7 @@ import javax.swing.JTable;
  */
 public class CustomerPanel extends javax.swing.JPanel {
     private DatabaseManager dbm;
+    private NewCustomerFrame newCust;
     /**
      * Creates new form CustomerManagmenetPanel
      */
@@ -25,7 +26,7 @@ public class CustomerPanel extends javax.swing.JPanel {
         initComponents();
         generateCustomers();
     }
-    private void generateCustomers() {
+    protected void generateCustomers() {
         JTable testTable = null;
         try {
             testTable = dbm.executeQueryGetTable("select * from customers;");
@@ -143,6 +144,7 @@ public class CustomerPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void NewCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewCustomerButtonActionPerformed
+        newCust = new NewCustomerFrame(this, dbm);
         // TODO add your handling code here:
     }//GEN-LAST:event_NewCustomerButtonActionPerformed
 

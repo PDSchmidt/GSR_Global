@@ -1,7 +1,7 @@
 package control;
 
 public class Credentials {
-    public static final String user = "root";
-    public static final String pw = "R0ck3tD0g!Ps";
-    public static final String db = "testing";
+    public static final String user = "guest";
+    public static final String pw = "LilB0bbyT@bles";
+    public static final String db = "testing2";
 }
