@@ -5,6 +5,10 @@
 package view;
 
 
+import view.inventorydb.LogisticDashboard;
+import view.orderdb.OrderDashboard;
+import control.DatabaseManager;
+
 /**
  *
  * @author Paul
@@ -12,24 +16,25 @@ package view;
 public class LoginFrame extends javax.swing.JFrame {
     private MainFrame main;
     private LoginFrame thisFrame;
+    private DatabaseManager dbm;
 
     /**
      * Creates new form LoginFrame
      */
     public LoginFrame(final String theme) {
         initComponents();
-        main = new MainFrame(theme);
+        dbm = new DatabaseManager();
+        main = new MainFrame(theme, dbm);
         thisFrame = this;
-
     }
     private void goToOrder() {
-        OrderDashboard od = new OrderDashboard();
+        OrderDashboard od = new OrderDashboard(dbm);
         main.add(od);
         main.setVisible(true);
         thisFrame.dispose();
     }
     private void goToLogistics() {
-        LogisticDashboard ld = new LogisticDashboard();
+        LogisticDashboard ld = new LogisticDashboard(dbm);
         main.add(ld);
         main.setVisible(true);
         thisFrame.dispose();
