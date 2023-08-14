@@ -4,7 +4,8 @@ import model.AppCalender;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+/**
+*/
 public class NewOrder {
     private final int cusId;
     private final NewDelivery delivery;

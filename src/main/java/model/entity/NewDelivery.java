@@ -1,5 +1,6 @@
 package model.entity;
-
+/**
+*/
 public class NewDelivery {
     private String ZIPCODE;
     private String street;

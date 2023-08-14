@@ -1,5 +1,5 @@
 package model.entity;
-
+//
 public class StoreLocation {
     private int storeID;
     private String storeName;
