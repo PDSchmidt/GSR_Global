@@ -4,6 +4,8 @@ import model.entity.Product;
 
 import java.math.BigDecimal;
 
+/**
+*/
 public class NewOrderItem extends Product {
     private int quantity;
     private BigDecimal subtotal;
