@@ -38,6 +38,7 @@ public class OrderDashboard extends javax.swing.JPanel {
         ActiveOrderPanel = new OrderPanel("ACTIVE", dbm);
         ClosedOrderPanel = new OrderPanel("CLOSED", dbm);
         CustomersPanel = new CustomerPanel(dbm);
+        ReportsPanel = new ReportsPanel(dbm);
 
         setMinimumSize(new java.awt.Dimension(1280, 720));
         setLayout(new java.awt.GridLayout(1, 0));
@@ -46,6 +47,7 @@ public class OrderDashboard extends javax.swing.JPanel {
         OrdersTabbedPane.addTab("Active Orders", ActiveOrderPanel);
         OrdersTabbedPane.addTab("Closed Orders", ClosedOrderPanel);
         OrdersTabbedPane.addTab("Customer Management", CustomersPanel);
+        OrdersTabbedPane.addTab("Reports", ReportsPanel);
 
         add(OrdersTabbedPane);
     }// </editor-fold>//GEN-END:initComponents
@@ -57,5 +59,6 @@ public class OrderDashboard extends javax.swing.JPanel {
     private view.orderdb.CustomerPanel CustomersPanel;
     private view.orderdb.NewOrderPanel NewOrderPanel;
     private javax.swing.JTabbedPane OrdersTabbedPane;
+    private view.orderdb.ReportsPanel ReportsPanel;
     // End of variables declaration//GEN-END:variables
 }
