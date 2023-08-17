@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 
@@ -10,16 +6,26 @@ import view.orderdb.OrderDashboard;
 import control.DatabaseManager;
 
 /**
- *
- * @author Paul
+ * The landing frame/window/page for the application
+ * @author Paul Schmidt
  */
 public class LoginFrame extends javax.swing.JFrame {
+    /**
+     * The main Frame
+     */
     private MainFrame main;
+    /**
+     * A reference to itself
+     */
     private LoginFrame thisFrame;
+    /**
+     * The DatabaseManager that holds a connection to the database
+     */
     private DatabaseManager dbm;
 
     /**
-     * Creates new form LoginFrame
+     * Creates a LoginFrame and sets the theme
+     * @param theme the Theme to display, Light or Dark
      */
     public LoginFrame(final String theme) {
         initComponents();
@@ -27,12 +33,20 @@ public class LoginFrame extends javax.swing.JFrame {
         main = new MainFrame(theme, dbm);
         thisFrame = this;
     }
+
+    /**
+     * Disposes this, creates an OrderDashboard
+     */
     private void goToOrder() {
         OrderDashboard od = new OrderDashboard(dbm);
         main.add(od);
         main.setVisible(true);
         thisFrame.dispose();
     }
+
+    /**
+     * Disposes this, creates a LogisticsDashboard
+     */
     private void goToLogistics() {
         LogisticDashboard ld = new LogisticDashboard(dbm);
         main.add(ld);
@@ -136,10 +150,18 @@ public class LoginFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Navigates to LogisticsDashboard
+     * @param evt the buttonclick event
+     */
     private void LogisticsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogisticsButtonActionPerformed
         thisFrame.goToLogistics();
     }//GEN-LAST:event_LogisticsButtonActionPerformed
 
+    /**
+     * Navigates to OrderDashboard
+     * @param evt the buttonclick event
+     */
     private void OrderFormButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderFormButtonActionPerformed
         thisFrame.goToOrder();
     }//GEN-LAST:event_OrderFormButtonActionPerformed

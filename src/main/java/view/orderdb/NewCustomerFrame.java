@@ -1,24 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view.orderdb;
 
-import view.orderdb.CustomerPanel;
 import control.DatabaseManager;
-
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import model.entity.Customer;
 
 /**
- *
- * @author Paul
+ * A custom JFrame that allows the user to enter a new customer into the database
+ * @author Paul Schmidt
  */
 public class NewCustomerFrame extends javax.swing.JFrame {
 
-    CustomerPanel parent;
-    DatabaseManager dbm;
+    /**
+     * The parent of this component
+     */
+    private CustomerPanel parent;
+    /**
+     * The DatabaseManager with the connection to the database
+     */
+    private DatabaseManager dbm;
     /**
      * Creates new form NewCustomerFrame
      */
@@ -30,11 +30,23 @@ public class NewCustomerFrame extends javax.swing.JFrame {
         this.setVisible(true);
         this.setLocationRelativeTo(null);
     }
+
+    /**
+     * Creates a NewCustomerFrame with the given parent and DatabaseManager
+     * @param parent the parent of this component
+     * @param dbm the DatabaseManager that holds the connection to the database
+     */
     public NewCustomerFrame(final CustomerPanel parent, final DatabaseManager dbm) {
         this();
         this.parent = parent;
         this.dbm = dbm;
     }
+
+    /**
+     * Creates a MaskFormatter using the given String
+     * @param s the regex expression
+     * @return the MaskFormatter
+     */
     protected MaskFormatter createFormatter(String s) {
     MaskFormatter formatter = null;
     try {
@@ -46,41 +58,47 @@ public class NewCustomerFrame extends javax.swing.JFrame {
     }
     return formatter;
 }
+
+    /**
+     * Checks the validity of all Fields using regular expressions to test for valid
+     * input.
+     * @return true if all fields are formatted correctly, false otherwise
+     */
     private boolean checkInput() {
         boolean result = true;
         if(!(((String)firstNameField.getValue()).matches("[a-zA-Z]+")))
             result = false;
-        else
-            System.out.println("FIRST OKAY!");
+//        else
+//            System.out.println("FIRST OKAY!");
         
         if(!((String)lastNameField.getValue()).matches("[a-zA-Z]+"))
             result = false;
-        else
-            System.out.println("LAST OKAY!");
+//        else
+//            System.out.println("LAST OKAY!");
         
         if(!((String)emailField.getValue()).matches("[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-z]+"))
             result = false;
-        else
-            System.out.println("EMAIL OKAY!");
+//        else
+//            System.out.println("EMAIL OKAY!");
         
         if(!(streetField.getText()).matches("[0-9]+ [a-zA-Z[ ],-.]+"))
             result = false;
-        else
-            System.out.println("STREET OKAY!");
+//        else
+//            System.out.println("STREET OKAY!");
         
         if(!(cityField.getText()).matches("[a-zA-Z]+"))
             result = false;
-        else
-            System.out.println("CITY OKAY!");
+//        else
+//            System.out.println("CITY OKAY!");
         
         if(!(zipField.getText()).matches("[0-9]{5}"))
             result = false;
-        else
-            System.out.println("ZIP OKAY!");
-        System.out.println("ALL OKAY? : " + result);
-        if (result) {
-            System.out.println("Customer okay? : " + result);
-        }
+//        else
+//            System.out.println("ZIP OKAY!");
+//        System.out.println("ALL OKAY? : " + result);
+//        if (result) {
+//            System.out.println("Customer okay? : " + result);
+//        }
         return result;
     }
     /**
@@ -132,11 +150,6 @@ public class NewCustomerFrame extends javax.swing.JFrame {
         jLabel7.setText("State:");
 
         stateComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AL", "AK", "AZ", "AR", "AS", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "MP", "OH", "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "TT", "UT", "VT", "VA", "VI", "WA", "WV", "WI", "WY" }));
-        stateComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stateComboBoxActionPerformed(evt);
-            }
-        });
 
         jLabel8.setText("City:");
 
@@ -162,16 +175,14 @@ public class NewCustomerFrame extends javax.swing.JFrame {
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(submitButton)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(cityField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(submitButton)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(cityField, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel7)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(streetField)))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -257,10 +268,11 @@ public class NewCustomerFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void stateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stateComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_stateComboBoxActionPerformed
-
+    /**
+     * Checks for valid input in all fields. If correct, creates a new Customer and
+     * adds them into the database. Then updates the displayed customers
+     * @param evt the buttonclick event
+     */
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         firstNameField.setValue(firstNameField.getText());
         lastNameField.setValue(lastNameField.getText());
@@ -280,7 +292,6 @@ public class NewCustomerFrame extends javax.swing.JFrame {
             attr[6] = (String)stateComboBox.getSelectedItem();
             attr[7] = phoneField.getText();
             customerAdded = dbm.addNewCustomer(new Customer(-1, attr));
-            System.out.println("Customer added? : " + customerAdded);
         }
         if (customerAdded) {
             JOptionPane.showMessageDialog(this,"Customer added successfully!");

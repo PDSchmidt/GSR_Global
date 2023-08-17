@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.inventorydb;
 
 import control.DatabaseManager;
@@ -9,22 +5,35 @@ import java.sql.SQLException;
 import javax.swing.JTable;
 
 /**
- *
- * @author Paul
+ * A JPanel that is used for displaying the inventory of all stores
+ * @author Paul Schmidt
  */
 public class InventoryPanel extends javax.swing.JPanel {
+    /**
+     * The dbm that holds a connection to the database
+     */
     private DatabaseManager dbm;
     /**
-     * Creates new form InventoryPanel
+     * Creates new form InventoryPanel without a database connection
      */
     public InventoryPanel() {
         initComponents();
     }
+
+    /**
+     * Creates a new InventoryPanel with a database connection
+     * @param dbm the DatabaseManager that holds the connection to the database
+     */
     public InventoryPanel(final DatabaseManager dbm) {
         this.dbm = dbm;
         initComponents();
         generateInventory();
     }
+
+    /**
+     * Queries the database for all inventory information for all stores
+     * and generates the JTable with the information
+     */
     private void generateInventory() {
         JTable testTable = null;
         try {
@@ -36,11 +45,13 @@ public class InventoryPanel extends javax.swing.JPanel {
         }
         if (testTable != null) {
             addTable(testTable);
-            System.out.println("INVENTORY TABLE ADDED");
-        } else {
-            System.out.println("ISSUE CREATING INVENTORY TABLE");
         }
     }
+
+    /**
+     * Removes the old table from the ScrollPane and adds a new one
+     * @param table the new table to add to the ScrollPane
+     */
     private void addTable(final JTable table) {
         InventoryScrollPane.getViewport().remove(InventoryTable);
         InventoryTable = table;

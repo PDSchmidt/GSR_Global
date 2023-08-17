@@ -1,35 +1,38 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.orderdb;
 
-import Testing.Testing;
 import control.DatabaseManager;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.sql.SQLException;
 
 
 /**
  *
- * @author Paul
+ * @author Paul Schmidt
  */
 public class OrderPanel extends javax.swing.JPanel {
+    /**
+     * The type of OrderPanel - either ACTIVE or CLOSED
+     */
     private String type;
+    /**
+     * The DatabaseManager that holds the connection to the database
+     */
     private DatabaseManager dbm;
 
+    /**
+     * Creates a default OrderPanel
+     */
     public OrderPanel() {
         initComponents();
     }
+
     /**
-     * Creates new form ActiveOrderPanel
+     * Creates a new OrderPanel of the given type
+     * @param type the type of orders this panel will represent:
+     *             ACTIVE - All Active orders that are not marked "COMPLETE"
+     *             CLOSED - All orders marked as "COMPLETE"
+     * @param dbm the DatabaseManager that holds the connection to the database
      */
     public OrderPanel(final String type, final DatabaseManager dbm) {
         this.type = type;
@@ -41,6 +44,10 @@ public class OrderPanel extends javax.swing.JPanel {
             generateClosedOrders();
         }
     }
+
+    /**
+     * Populates the JTable in this panel with the Active Orders
+     */
     private void generateActiveOrders() {
         JTable testTable = null;
         try {
@@ -55,11 +62,12 @@ public class OrderPanel extends javax.swing.JPanel {
         }
         if (testTable != null) {
             addTable(testTable);
-            System.out.println("ACTIVE ORDERS TABLE ADDED");
-        } else {
-            System.out.println("ISSUE CREATING ACTIVE ORDERS TABLE");
         }
     }
+
+    /**
+     * Populates the JTable in this panel with the Closed/Completed orders
+     */
     private void generateClosedOrders() {
         JTable testTable = null;
         try {
@@ -74,11 +82,13 @@ public class OrderPanel extends javax.swing.JPanel {
         }
         if (testTable != null) {
             addTable(testTable);
-            System.out.println("CLOSED ORDERS TABLE ADDED");
-        } else {
-            System.out.println("ISSUE CREATING CLOSED ORDERS TABLE");
         }
     }
+
+    /**
+     * Removes the old table for this OrderPanel and replaces it with a new one
+     * @param table the new table to add to this OrderPanel
+     */
     private void addTable(final JTable table) {
         OrdersScrollPane.getViewport().remove(OrdersTable);
         OrdersTable = table;
@@ -173,6 +183,11 @@ public class OrderPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Requeiries the database for either the Active orders or Closed orders based
+     * on this OrderPanel's type
+     * @param evt
+     */
     private void RefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtonActionPerformed
         if(type.equals("ACTIVE")) {
             generateActiveOrders();

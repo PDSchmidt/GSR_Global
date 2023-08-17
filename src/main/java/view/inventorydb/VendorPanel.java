@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.inventorydb;
 
 import control.DatabaseManager;
@@ -9,22 +5,34 @@ import java.sql.SQLException;
 import javax.swing.JTable;
 
 /**
- *
- * @author Paul
+ * Panel that generates and holds information about Vendors that supply the company with parts
+ * @author Paul Schmidt
  */
 public class VendorPanel extends javax.swing.JPanel {
+    /**
+     * The dbm that holds a connection to the database
+     */
     private DatabaseManager dbm;
     /**
-     * Creates new form VendorPanel
+     * Creates new form VendorPanel without a connection to a database
      */
     public VendorPanel() {
         initComponents();
     }
+
+    /**
+     * Creates a VendorPanel with a connection to a database
+     * @param dbm the connection to the desired database
+     */
     public VendorPanel(final DatabaseManager dbm) {
         this.dbm = dbm;
         initComponents();
         generateVendors();
     }
+
+    /**
+     * Generates a JTable with information about the Vendors and adds it to the Panel
+     */
     private void generateVendors() {
         JTable testTable = null;
         try {
@@ -41,6 +49,11 @@ public class VendorPanel extends javax.swing.JPanel {
             System.out.println("ISSUE CREATING VENDORS TABLE");
         }
     }
+
+    /**
+     * Removes the old table from this Panel and adds a New one to it
+     * @param table the new table to display
+     */
     private void addTable(final JTable table) {
         VendorsScrollPane.getViewport().remove(VendorsTable);
         VendorsTable = table;

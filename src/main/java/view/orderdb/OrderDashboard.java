@@ -1,22 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.orderdb;
 
-import view.orderdb.CustomerPanel;
 import control.DatabaseManager;
 
 /**
- *
- * @author Paul
+ * A custom JPanel that can hold information related to customers and orders
+ * @author Paul Schmidt
  */
 public class OrderDashboard extends javax.swing.JPanel {
 
+    /**
+     * The DatabaseManager that holds the connection to the database
+     */
     private DatabaseManager dbm;
 
     /**
-     * Creates new form OrderDashboard
+     * Creates an OrderDashboard Panel with a connection to the database
+     * @param dbm the DDatabaseManager with that holds the connection to the database
      */
     public OrderDashboard(final DatabaseManager dbm) {
         this.dbm = dbm;

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.orderdb;
 
 import control.DatabaseManager;
@@ -9,23 +5,36 @@ import java.sql.SQLException;
 import javax.swing.JTable;
 
 /**
- *
- * @author Paul
+ * Custom JPanel that displays information about customers and allows for the
+ * creation of new customers.
+ * @author Paul Schmidt
  */
 public class CustomerPanel extends javax.swing.JPanel {
-    private DatabaseManager dbm;
-    private NewCustomerFrame newCust;
     /**
-     * Creates new form CustomerManagmenetPanel
+     * DatabaseManager that holds the connection to the database
+     */
+    private DatabaseManager dbm;
+
+    /**
+     * Creates new form CustomerManagementPanel
      */
     public CustomerPanel() {
         initComponents();
     }
+
+    /**
+     * Creates a new Customer Panel with the given database connection
+     * @param dbm the DatabaseManager that holds a connection to the database
+     */
     public CustomerPanel(final DatabaseManager dbm) {
         this.dbm = dbm;
         initComponents();
         generateCustomers();
     }
+
+    /**
+     * Generates a JTable of Customer information using a SQL query to the database
+     */
     protected void generateCustomers() {
         JTable testTable = null;
         try {
@@ -36,11 +45,13 @@ public class CustomerPanel extends javax.swing.JPanel {
         }
         if (testTable != null) {
             addTable(testTable);
-            System.out.println("CUSTOEMRS TABLE ADDED");
-        } else {
-            System.out.println("ISSUE CREATING CUSTOMERS TABLE");
         }
     }
+
+    /**
+     *Removes the old customer table and adds the new one to the Scroll Pane
+     * @param table the new table
+     */
     private void addTable(final JTable table) {
         CustomerManagementScrollPane.getViewport().remove(CustomersTable);
         CustomersTable = table;
@@ -135,9 +146,12 @@ public class CustomerPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Creates a New Customer Frame for the user to input information into.
+     * @param evt the buttonclick event
+     */
     private void NewCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewCustomerButtonActionPerformed
-        newCust = new NewCustomerFrame(this, dbm);
-        // TODO add your handling code here:
+        new NewCustomerFrame(this, dbm);
     }//GEN-LAST:event_NewCustomerButtonActionPerformed
 
 
