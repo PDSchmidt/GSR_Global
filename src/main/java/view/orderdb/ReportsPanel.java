@@ -116,7 +116,7 @@ public class ReportsPanel extends javax.swing.JPanel {
         DescriptionArea.setLineWrap(true);
         DescriptionArea.setRows(5);
         DescriptionArea.setWrapStyleWord(true);
-        DescriptionArea.setEnabled(false);
+        DescriptionArea.setFocusable(false);
         jScrollPane1.setViewportView(DescriptionArea);
 
         javax.swing.GroupLayout InfoPanelLayout = new javax.swing.GroupLayout(InfoPanel);
@@ -206,7 +206,6 @@ public class ReportsPanel extends javax.swing.JPanel {
             public void itemStateChanged(ItemEvent arg) {
                 if(arg.getStateChange() == ItemEvent.SELECTED) {
                     selected = theReports.get((String)arg.getItem());
-                    updateInformationDisplay();
                 }
             }
 

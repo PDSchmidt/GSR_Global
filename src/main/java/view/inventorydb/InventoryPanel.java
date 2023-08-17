@@ -28,16 +28,17 @@ public class InventoryPanel extends javax.swing.JPanel {
     private void generateInventory() {
         JTable testTable = null;
         try {
-            testTable = dbm.executeQueryGetTable("select * from inventory;");
+            testTable = dbm.executeQueryGetTable("select LocationName, PartNumber, PartName, PartDescreption, Quantity\n" +
+                    "from inventory natural join parts natural join storelocations;");
             testTable.setAutoCreateRowSorter(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         if (testTable != null) {
             addTable(testTable);
-            System.out.println("ACTIVE ORDERS TABLE ADDED");
+            System.out.println("INVENTORY TABLE ADDED");
         } else {
-            System.out.println("ISSUE CREATING ACTIVE ORDERS TABLE");
+            System.out.println("ISSUE CREATING INVENTORY TABLE");
         }
     }
     private void addTable(final JTable table) {
@@ -59,8 +60,6 @@ public class InventoryPanel extends javax.swing.JPanel {
         InventoryPanel = new javax.swing.JPanel();
         InventoryScrollPane = new javax.swing.JScrollPane();
         InventoryTable = new javax.swing.JTable();
-        ApplyFiltersInventoryButton = new javax.swing.JButton();
-        ResetFiltersInventoryButton = new javax.swing.JButton();
 
         InventoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -85,32 +84,19 @@ public class InventoryPanel extends javax.swing.JPanel {
         InventoryTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         InventoryScrollPane.setViewportView(InventoryTable);
 
-        ApplyFiltersInventoryButton.setText("Apply Filters...");
-
-        ResetFiltersInventoryButton.setText("Reset Filters");
-
         javax.swing.GroupLayout InventoryPanelLayout = new javax.swing.GroupLayout(InventoryPanel);
         InventoryPanel.setLayout(InventoryPanelLayout);
         InventoryPanelLayout.setHorizontalGroup(
             InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(InventoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(InventoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(InventoryPanelLayout.createSequentialGroup()
-                        .addComponent(ApplyFiltersInventoryButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ResetFiltersInventoryButton)))
+                .addComponent(InventoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(34, Short.MAX_VALUE))
         );
         InventoryPanelLayout.setVerticalGroup(
             InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(InventoryPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ApplyFiltersInventoryButton)
-                    .addComponent(ResetFiltersInventoryButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(35, 35, 35)
                 .addComponent(InventoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(54, Short.MAX_VALUE))
         );
@@ -139,10 +125,8 @@ public class InventoryPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton ApplyFiltersInventoryButton;
     private javax.swing.JPanel InventoryPanel;
     private javax.swing.JScrollPane InventoryScrollPane;
     private javax.swing.JTable InventoryTable;
-    private javax.swing.JButton ResetFiltersInventoryButton;
     // End of variables declaration//GEN-END:variables
 }

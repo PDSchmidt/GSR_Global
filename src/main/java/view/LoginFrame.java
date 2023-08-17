@@ -48,23 +48,51 @@ public class LoginFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         NameLabel = new javax.swing.JLabel();
         ButtonsPanel = new javax.swing.JPanel();
         OrderFormButton = new javax.swing.JButton();
         LogisticsButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(0, 0, 0));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocationByPlatform(true);
         setMaximumSize(new java.awt.Dimension(340, 450));
         setMinimumSize(new java.awt.Dimension(340, 450));
         getContentPane().setLayout(new java.awt.GridLayout(2, 1));
 
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        NameLabel.setBackground(new java.awt.Color(0, 0, 0));
         NameLabel.setFont(new java.awt.Font("Trebuchet MS", 0, 48)); // NOI18N
         NameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        NameLabel.setText("GSR Global");
-        getContentPane().add(NameLabel);
+        NameLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/updatedlogo2.png"))); // NOI18N
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 340, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(NameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 231, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(NameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        getContentPane().add(jPanel1);
+
+        ButtonsPanel.setBackground(new java.awt.Color(0, 0, 0));
         ButtonsPanel.setPreferredSize(new java.awt.Dimension(340, 225));
 
         OrderFormButton.setText("Order Dashboard");
@@ -122,5 +150,6 @@ public class LoginFrame extends javax.swing.JFrame {
     private javax.swing.JButton LogisticsButton;
     private javax.swing.JLabel NameLabel;
     private javax.swing.JButton OrderFormButton;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Class used to generate data for the orders table of the Database Schema.
+ * @author Paul Schmidt
+ */
 public class Order {
     public List<OrderItem> oi;
     public Delivery deliv;

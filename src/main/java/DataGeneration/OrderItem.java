@@ -2,6 +2,9 @@ package DataGeneration;
 
 import java.util.Random;
 
+/**
+ * Class used to generate data for the orderitem Database Schema.
+ */
 public class OrderItem {
     public static Random rand = new Random();
     private int orderid;

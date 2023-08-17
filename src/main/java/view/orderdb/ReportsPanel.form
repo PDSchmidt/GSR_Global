@@ -178,7 +178,7 @@
                 <Property name="lineWrap" type="boolean" value="true"/>
                 <Property name="rows" type="int" value="5"/>
                 <Property name="wrapStyleWord" type="boolean" value="true"/>
-                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -251,7 +251,7 @@
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-            <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="ReportComboBox.addItemListener(new ItemListener() {&#xd;&#xa;    public void itemStateChanged(ItemEvent arg) {&#xd;&#xa;        if(arg.getStateChange() == ItemEvent.SELECTED) {&#xd;&#xa;            selected = theReports.get((String)arg.getItem());&#xd;&#xa;            updateInformationDisplay();&#xd;&#xa;        }&#xd;&#xa;    }&#xd;&#xa;    &#xd;&#xa;});"/>
+            <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="ReportComboBox.addItemListener(new ItemListener() {&#xd;&#xa;    public void itemStateChanged(ItemEvent arg) {&#xd;&#xa;        if(arg.getStateChange() == ItemEvent.SELECTED) {&#xd;&#xa;            selected = theReports.get((String)arg.getItem());&#xd;&#xa;        }&#xd;&#xa;    }&#xd;&#xa;    &#xd;&#xa;});"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="GetReportButton">

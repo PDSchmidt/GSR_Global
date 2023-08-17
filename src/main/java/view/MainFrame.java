@@ -8,7 +8,10 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import control.DatabaseManager;
 
-import java.awt.EventQueue;
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 
 /**
@@ -39,7 +42,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         MenuBar = new javax.swing.JMenuBar();
-        FileMenu = new javax.swing.JMenu();
         OptionsMenu = new javax.swing.JMenu();
         LightDarkModeToggle = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -49,9 +51,6 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        FileMenu.setText("File");
-        MenuBar.add(FileMenu);
 
         OptionsMenu.setText("Options");
 
@@ -94,6 +93,9 @@ public class MainFrame extends javax.swing.JFrame {
                 @Override
                 public void run() {
                     FlatDarkLaf.setup();
+                    UIManager.put("Table.showVerticalLines", true);
+                    UIManager.put("Table.showHorizontalLines", true);
+                    UIManager.put("Table.cellMargins", new Insets(0,10,0,10));
                     FlatLaf.updateUI();
                 }
             });
@@ -103,6 +105,9 @@ public class MainFrame extends javax.swing.JFrame {
                 @Override
                 public void run() {
                     FlatLightLaf.setup();
+                    UIManager.put("Table.showVerticalLines", true);
+                    UIManager.put("Table.showHorizontalLines", true);
+                    UIManager.put("Table.cellMargins", new Insets(0,10,0,10));
                     FlatLaf.updateUI();
                 }
             });
@@ -124,7 +129,6 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem BackToMenuItem;
     private javax.swing.JMenuItem ExitMenuItem;
-    private javax.swing.JMenu FileMenu;
     private javax.swing.JMenuItem LightDarkModeToggle;
     private javax.swing.JMenuBar MenuBar;
     private javax.swing.JMenu OptionsMenu;

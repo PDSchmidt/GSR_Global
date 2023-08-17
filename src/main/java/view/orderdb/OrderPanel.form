@@ -45,15 +45,11 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="OrdersScrollPane" alignment="0" min="-2" pref="1250" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="ApplyFiltersButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ResetFiltersButton" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="RefreshButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="24" max="32767" attributes="0"/>
               </Group>
@@ -63,10 +59,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ApplyFiltersButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ResetFiltersButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="RefreshButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="OrdersScrollPane" min="-2" pref="607" max="-2" attributes="0"/>
                   <EmptySpace pref="47" max="32767" attributes="0"/>
@@ -104,15 +97,13 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="ApplyFiltersButton">
+        <Component class="javax.swing.JButton" name="RefreshButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Apply Filters..."/>
+            <Property name="text" type="java.lang.String" value="Refresh"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="ResetFiltersButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Reset Filters"/>
-          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RefreshButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

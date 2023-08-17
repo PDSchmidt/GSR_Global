@@ -59,7 +59,6 @@ public class CustomerPanel extends javax.swing.JPanel {
 
         CustomerManagementPanel = new javax.swing.JPanel();
         NewCustomerButton = new javax.swing.JButton();
-        EditCustomerButton = new javax.swing.JButton();
         CustomerManagementScrollPane = new javax.swing.JScrollPane();
         CustomersTable = new javax.swing.JTable();
 
@@ -69,8 +68,6 @@ public class CustomerPanel extends javax.swing.JPanel {
                 NewCustomerButtonActionPerformed(evt);
             }
         });
-
-        EditCustomerButton.setText("Edit Selected");
 
         CustomersTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -103,19 +100,14 @@ public class CustomerPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(CustomerManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(CustomerManagementScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(CustomerManagementPanelLayout.createSequentialGroup()
-                        .addComponent(NewCustomerButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(EditCustomerButton)))
+                    .addComponent(NewCustomerButton))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
         CustomerManagementPanelLayout.setVerticalGroup(
             CustomerManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CustomerManagementPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(CustomerManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(NewCustomerButton)
-                    .addComponent(EditCustomerButton))
+                .addComponent(NewCustomerButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CustomerManagementScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(47, Short.MAX_VALUE))
@@ -153,7 +145,6 @@ public class CustomerPanel extends javax.swing.JPanel {
     private javax.swing.JPanel CustomerManagementPanel;
     private javax.swing.JScrollPane CustomerManagementScrollPane;
     private javax.swing.JTable CustomersTable;
-    private javax.swing.JButton EditCustomerButton;
     private javax.swing.JButton NewCustomerButton;
     // End of variables declaration//GEN-END:variables
 }
