@@ -1,5 +1,8 @@
 package DataGeneration;
 
+/**
+ * Class used to generate data for the product Database Schema.
+ */
 public class Product {
     public int id;
     public double cost;

@@ -47,14 +47,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="InventoryScrollPane" alignment="0" min="-2" pref="1240" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="ApplyFiltersInventoryButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ResetFiltersInventoryButton" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <Component id="InventoryScrollPane" min="-2" pref="1240" max="-2" attributes="0"/>
                   <EmptySpace pref="34" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -62,12 +55,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ApplyFiltersInventoryButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ResetFiltersInventoryButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                   <Component id="InventoryScrollPane" min="-2" pref="600" max="-2" attributes="0"/>
                   <EmptySpace pref="54" max="32767" attributes="0"/>
               </Group>
@@ -105,16 +93,6 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="ApplyFiltersInventoryButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Apply Filters..."/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="ResetFiltersInventoryButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Reset Filters"/>
-          </Properties>
-        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

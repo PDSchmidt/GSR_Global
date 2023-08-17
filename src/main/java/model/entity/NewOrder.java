@@ -1,18 +1,49 @@
 package model.entity;
 
 import model.AppCalender;
-
 import java.math.BigDecimal;
 import java.util.List;
-
+/**
+ * Represents a New Order to be inserted into the Database.
+ * @author Paul Schmidt
+*/
 public class NewOrder {
+    /**
+     * The ID of the customer that placed the order
+     */
     private final int cusId;
+    /**
+     * The Delivery entity associated with this Order
+     */
     private final NewDelivery delivery;
+    /**
+     * The Location ID of the store associated with this Order.
+     */
     private final int LocationID;
+    /**
+     * The OrderItems associated with this Order
+     */
     private final List<NewOrderItem> items;
+    /**
+     * The total cost to the customer of this Order
+     */
     private BigDecimal total;
+    /**
+     * The date that the order was placed
+     */
     private final AppCalender orderDate;
+    /**
+     * The Status of this order
+     */
     private final String orderStatus;
+
+    /**
+     * Constructs an Order to be inserted into the database
+     * @param cusId the ID of the customer
+     * @param delivery the delivery of this order
+     * @param LocationID the ID of the store who will fulfill the order
+     * @param items the list of items associated with the order
+     */
     public NewOrder(final int cusId, final NewDelivery delivery, final int LocationID, final List<NewOrderItem> items) {
     this.cusId = cusId;
         this.delivery = delivery;
@@ -47,10 +78,12 @@ public class NewOrder {
         result.append("\t\t(@lastDeliveryID, ").append(cusId).append(", @lastDeliveryID, ").append(LocationID).append(", \"")
                 .append(orderDate.getFormatted()).append("\", \"").append(total.toString()).append("\", \"")
                 .append(orderStatus).append("\");\n");
+
         //If there are order items
         if(!items.isEmpty()) {
             result.append("\tinsert into order_item (OrderID, ProductID, Quantity, SubTotalCost)\n");
             result.append("\tVALUES\n");
+
             //For each order item, append its information in the form of an insert statement
             for(int i = 0 ; i < items.size() - 1; i++) {
                 result.append("\t\t").append(items.get(i).getFormattedValues()).append(",\n");

@@ -1,26 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import control.DatabaseManager;
-
-import java.awt.EventQueue;
-
+import javax.swing.*;
+import java.awt.*;
 
 /**
- *
- * @author Paul
+ * The main frame of the application that holds the different dashboards
+ * @author Paul Schmidt
  */
 public class MainFrame extends javax.swing.JFrame {
-    private String currentTheme;
-    private MainFrame myRef;
-    private DatabaseManager dbm;
     /**
-     * Creates new form NewJFrame
+     * The current visual theme
+     */
+    private String currentTheme;
+    /**
+     * A reference to itself
+     */
+    private MainFrame myRef;
+    /**
+     * The DatabaseManager that holds the connection to the database
+     */
+    private DatabaseManager dbm;
+
+    /**
+     * Constructs a new MainFrame using the given DatabaseManager and theme
+     * @param theme the current theme, either light or dark
+     * @param dbm the DatabaseManager that holds a connection to the database
      */
     public MainFrame( final String theme, final DatabaseManager dbm) {
         currentTheme = theme;
@@ -39,7 +46,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         MenuBar = new javax.swing.JMenuBar();
-        FileMenu = new javax.swing.JMenu();
         OptionsMenu = new javax.swing.JMenu();
         LightDarkModeToggle = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -49,9 +55,6 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        FileMenu.setText("File");
-        MenuBar.add(FileMenu);
 
         OptionsMenu.setText("Options");
 
@@ -88,12 +91,19 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Toggles the visual theme to Light if it was Dark and vice-versa
+     * @param evt the buttonclick event
+     */
     private void LightDarkModeToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LightDarkModeToggleActionPerformed
         if (currentTheme.equals("light")) {
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
                     FlatDarkLaf.setup();
+                    UIManager.put("Table.showVerticalLines", true);
+                    UIManager.put("Table.showHorizontalLines", true);
+                    UIManager.put("Table.cellMargins", new Insets(0,10,0,10));
                     FlatLaf.updateUI();
                 }
             });
@@ -103,6 +113,9 @@ public class MainFrame extends javax.swing.JFrame {
                 @Override
                 public void run() {
                     FlatLightLaf.setup();
+                    UIManager.put("Table.showVerticalLines", true);
+                    UIManager.put("Table.showHorizontalLines", true);
+                    UIManager.put("Table.cellMargins", new Insets(0,10,0,10));
                     FlatLaf.updateUI();
                 }
             });
@@ -110,11 +123,19 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_LightDarkModeToggleActionPerformed
 
+    /**
+     * Exits the application
+     * @param evt the buttonclick event
+     */
     private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed
         myRef.dispose();
         System.exit(0);
     }//GEN-LAST:event_ExitMenuItemActionPerformed
 
+    /**
+     * Disposes this and navigates to the LoginFrame
+     * @param evt the buttonclick event
+     */
     private void BackToMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackToMenuItemActionPerformed
         LoginFrame login = new LoginFrame(currentTheme);
         login.setVisible(true);
@@ -124,7 +145,6 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem BackToMenuItem;
     private javax.swing.JMenuItem ExitMenuItem;
-    private javax.swing.JMenu FileMenu;
     private javax.swing.JMenuItem LightDarkModeToggle;
     private javax.swing.JMenuBar MenuBar;
     private javax.swing.JMenu OptionsMenu;

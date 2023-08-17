@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view.orderdb;
 
 import control.DatabaseManager;
@@ -25,15 +21,34 @@ import model.entity.NewOrderItem;
 import model.entity.Product;
 
 /**
- *
- * @author Paul
+ * Frame popup that lets a user select from available products and add them to
+ * an order
+ * @author Paul Schmidt
  */
 public class ItemSelectFrame extends javax.swing.JFrame {
+    /**
+     * List of selected Product
+     */
     private List<Product> selected;
+    /**
+     * The Collection of Products returned from a query search of the database
+     */
     private Map<String, Product> searched;
+    /**
+     * The dbm that holds a connection to the database
+     */
     private DatabaseManager dbm;
+    /**
+     * The focused Product to update the displayed information
+     */
     private Product focused;
+    /**
+     * The subtotal for this selected Product and quantity
+     */
     private BigDecimal subtotal;
+    /**
+     * The Parent of this frame
+     */
     private NewOrderPanel parentPanel;
 
     /**
@@ -47,12 +62,25 @@ public class ItemSelectFrame extends javax.swing.JFrame {
         focused = null;
         subtotal = BigDecimal.ZERO;
         SubTotalLabel.setText(subtotal.toString());
+        QuantitySpinner.setValue(0);
     }
+
+    /**
+     * Creates a new ItemSelectFrame with a connection to the database and
+     * a reference to the Parent of this JFrame
+     * @param dbm the DatabaseManager that holds the connection to the database
+     * @param parent the Parent NewOrderPanel associated with this ItemSelectFrame
+     */
     public ItemSelectFrame(final DatabaseManager dbm, NewOrderPanel parent) {
         this();
         this.dbm = dbm;
         this.parentPanel = parent;
     }
+
+    /**
+     * Lists the returned Products from the Database query so that the user can select
+     * them to see more information about them
+     */
     public void repopulateSearched(){
         Vector<String> names = new Vector<>();
         for(String name : searched.keySet()){
@@ -60,22 +88,34 @@ public class ItemSelectFrame extends javax.swing.JFrame {
         }
         ProductListField.setListData(names);
     }
-    public void updateProductInfo(final int theIndex) {
+
+    /**
+     * Updates the displayed Product Information based on the selected Product
+     */
+    public void updateProductInfo() {
         focused = searched.get(ProductListField.getSelectedValue());
         if(focused != null) {
             ProductNameField.setText(focused.getName());
             ProductDescriptionArea.setText(focused.getDescription());
             UnitPriceLabel.setText(focused.getUPtoString());
+            if ((int)QuantitySpinner.getValue() == 0) {
+                QuantitySpinner.setValue(1);
+            }
             updateSubtotal(QuantitySpinner.getValue());
         } else {
             ProductNameField.setText("N/A");
             ProductDescriptionArea.setText("No Product Selected");
             UnitPriceLabel.setText("0.00");
-            QuantitySpinner.setValue(new Integer(0));
+            QuantitySpinner.setValue(0);
             updateSubtotal(0);
         }
         
     }
+
+    /**
+     * Updates the displayed subtotal based on the selected Product and quantity
+     * @param quantity the quantity used to calculate the subtotal
+     */
     public void updateSubtotal(final Object quantity) {
         try {
             Integer q = (Integer) quantity;
@@ -128,7 +168,7 @@ public class ItemSelectFrame extends javax.swing.JFrame {
         ProductListField.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 System.out.println("PRESSED index: " + e.getLastIndex());
-                updateProductInfo(e.getLastIndex());
+                updateProductInfo();
             }
 
         });
@@ -141,6 +181,7 @@ public class ItemSelectFrame extends javax.swing.JFrame {
 
         ProductDescriptionScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+        ProductDescriptionArea.setEditable(false);
         ProductDescriptionArea.setColumns(20);
         ProductDescriptionArea.setLineWrap(true);
         ProductDescriptionArea.setRows(5);
@@ -261,14 +302,14 @@ public class ItemSelectFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
                     .addComponent(jLabel1)
-                    .addComponent(SearchField)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(SearchButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(AllButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(19, 19, 19)
+                        .addComponent(AllButton, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(SearchField))
+                .addGap(53, 53, 53)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
@@ -314,11 +355,21 @@ public class ItemSelectFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Adds the current Product and quantity to the Order
+     * @param evt the buttonclick event
+     */
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
-        NewOrderItem theItem = new NewOrderItem(focused, (Integer)QuantitySpinner.getValue());
-        parentPanel.addOrderItem(theItem);
+        if((int)QuantitySpinner.getValue() > 0) {
+            NewOrderItem theItem = new NewOrderItem(focused, (Integer)QuantitySpinner.getValue());
+            parentPanel.addOrderItem(theItem);
+        }
     }//GEN-LAST:event_AddButtonActionPerformed
 
+    /**
+     * Performs a query of the database for products fitting the criteria of the search field
+     * @param evt the buttonclick event
+     */
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         System.out.println("BUTTON CLICKED SEARCH");
         String query = "select * from product where ";
@@ -346,12 +397,20 @@ public class ItemSelectFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_SearchButtonActionPerformed
 
+    /**
+     * Queries the database for all the Products available to offer
+     * @param evt the buttonclick event
+     */
     private void AllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AllButtonActionPerformed
         searched.clear();
         Product.generateProducts(searched, dbm);
         repopulateSearched();
     }//GEN-LAST:event_AllButtonActionPerformed
 
+    /**
+     * Closes and disposes the frame
+     * @param evt the buttonclick event
+     */
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed

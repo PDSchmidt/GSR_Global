@@ -1,10 +1,12 @@
 package DataGeneration;
 
-import javax.swing.*;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
+/**
+ * A class that helps generate data for the Delivery table of the Database Schema.
+ * @author Paul Schmidt
+ */
 public class Delivery {
     private int id;
     private String street;

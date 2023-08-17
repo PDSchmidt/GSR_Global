@@ -1,5 +1,9 @@
 package DataGeneration;
 import java.util.GregorianCalendar;
+
+/**
+ * Class used to generate random dates for use in the Database.
+ */
 public class RandomDate {
     public static GregorianCalendar randomDate(){
         GregorianCalendar gc = new GregorianCalendar();

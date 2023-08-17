@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.orderdb;
 
-import Testing.Testing;
 import control.DatabaseManager;
 
 import javax.swing.*;
@@ -13,17 +8,31 @@ import java.sql.SQLException;
 
 /**
  *
- * @author Paul
+ * @author Paul Schmidt
  */
 public class OrderPanel extends javax.swing.JPanel {
+    /**
+     * The type of OrderPanel - either ACTIVE or CLOSED
+     */
     private String type;
+    /**
+     * The DatabaseManager that holds the connection to the database
+     */
     private DatabaseManager dbm;
-    
+
+    /**
+     * Creates a default OrderPanel
+     */
     public OrderPanel() {
         initComponents();
     }
+
     /**
-     * Creates new form ActiveOrderPanel
+     * Creates a new OrderPanel of the given type
+     * @param type the type of orders this panel will represent:
+     *             ACTIVE - All Active orders that are not marked "COMPLETE"
+     *             CLOSED - All orders marked as "COMPLETE"
+     * @param dbm the DatabaseManager that holds the connection to the database
      */
     public OrderPanel(final String type, final DatabaseManager dbm) {
         this.type = type;
@@ -35,36 +44,51 @@ public class OrderPanel extends javax.swing.JPanel {
             generateClosedOrders();
         }
     }
+
+    /**
+     * Populates the JTable in this panel with the Active Orders
+     */
     private void generateActiveOrders() {
         JTable testTable = null;
         try {
-            testTable = dbm.executeQueryGetTable("select * from orders where orderstatus != \"COMPLETE\";");
+            testTable = dbm.executeQueryGetTable("select OrderID, LastName, FirstName, LocationName, OrderDate, TotalCost, OrderStatus\n" +
+                    "from orders join customers on (orders.CustomerID = customers.CustomerID)\n" +
+                    "join storelocations on (orders.LocationID = storelocations.LocationID)\n" +
+                    "where orders.OrderStatus != \"COMPLETE\"\n" +
+                    "order by OrderDate;");
             testTable.setAutoCreateRowSorter(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         if (testTable != null) {
             addTable(testTable);
-            System.out.println("ACTIVE ORDERS TABLE ADDED");
-        } else {
-            System.out.println("ISSUE CREATING ACTIVE ORDERS TABLE");
         }
     }
+
+    /**
+     * Populates the JTable in this panel with the Closed/Completed orders
+     */
     private void generateClosedOrders() {
         JTable testTable = null;
         try {
-            testTable = dbm.executeQueryGetTable("select * from orders where orderstatus = \"COMPLETE\";");
+            testTable = dbm.executeQueryGetTable("select OrderID, LastName, FirstName, LocationName, OrderDate, TotalCost, OrderStatus\n" +
+                    "from orders join customers on (orders.CustomerID = customers.CustomerID)\n" +
+                    "join storelocations on (orders.LocationID = storelocations.LocationID)\n" +
+                    "where orders.OrderStatus = \"COMPLETE\"\n" +
+                    "order by OrderDate;");
             testTable.setAutoCreateRowSorter(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         if (testTable != null) {
             addTable(testTable);
-            System.out.println("CLOSED ORDERS TABLE ADDED");
-        } else {
-            System.out.println("ISSUE CREATING CLOSED ORDERS TABLE");
         }
     }
+
+    /**
+     * Removes the old table for this OrderPanel and replaces it with a new one
+     * @param table the new table to add to this OrderPanel
+     */
     private void addTable(final JTable table) {
         OrdersScrollPane.getViewport().remove(OrdersTable);
         OrdersTable = table;
@@ -84,8 +108,7 @@ public class OrderPanel extends javax.swing.JPanel {
         OrderPanel = new javax.swing.JPanel();
         OrdersScrollPane = new javax.swing.JScrollPane();
         OrdersTable = new javax.swing.JTable();
-        ApplyFiltersButton = new javax.swing.JButton();
-        ResetFiltersButton = new javax.swing.JButton();
+        RefreshButton = new javax.swing.JButton();
 
         OrdersTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -110,9 +133,12 @@ public class OrderPanel extends javax.swing.JPanel {
         OrdersTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         OrdersScrollPane.setViewportView(OrdersTable);
 
-        ApplyFiltersButton.setText("Apply Filters...");
-
-        ResetFiltersButton.setText("Reset Filters");
+        RefreshButton.setText("Refresh");
+        RefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RefreshButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout OrderPanelLayout = new javax.swing.GroupLayout(OrderPanel);
         OrderPanel.setLayout(OrderPanelLayout);
@@ -122,19 +148,14 @@ public class OrderPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(OrdersScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(OrderPanelLayout.createSequentialGroup()
-                        .addComponent(ApplyFiltersButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ResetFiltersButton)))
+                    .addComponent(RefreshButton))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
         OrderPanelLayout.setVerticalGroup(
             OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ApplyFiltersButton)
-                    .addComponent(ResetFiltersButton))
+                .addComponent(RefreshButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(OrdersScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(47, Short.MAX_VALUE))
@@ -162,12 +183,24 @@ public class OrderPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Requeiries the database for either the Active orders or Closed orders based
+     * on this OrderPanel's type
+     * @param evt
+     */
+    private void RefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshButtonActionPerformed
+        if(type.equals("ACTIVE")) {
+            generateActiveOrders();
+        } else {
+            generateClosedOrders();
+        }
+    }//GEN-LAST:event_RefreshButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton ApplyFiltersButton;
     private javax.swing.JPanel OrderPanel;
     private javax.swing.JScrollPane OrdersScrollPane;
     private javax.swing.JTable OrdersTable;
-    private javax.swing.JButton ResetFiltersButton;
+    private javax.swing.JButton RefreshButton;
     // End of variables declaration//GEN-END:variables
 }

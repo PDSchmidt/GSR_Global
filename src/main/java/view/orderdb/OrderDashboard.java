@@ -1,22 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.orderdb;
 
-import view.orderdb.CustomerPanel;
 import control.DatabaseManager;
 
 /**
- *
- * @author Paul
+ * A custom JPanel that can hold information related to customers and orders
+ * @author Paul Schmidt
  */
 public class OrderDashboard extends javax.swing.JPanel {
 
+    /**
+     * The DatabaseManager that holds the connection to the database
+     */
     private DatabaseManager dbm;
 
     /**
-     * Creates new form OrderDashboard
+     * Creates an OrderDashboard Panel with a connection to the database
+     * @param dbm the DDatabaseManager with that holds the connection to the database
      */
     public OrderDashboard(final DatabaseManager dbm) {
         this.dbm = dbm;
@@ -38,6 +37,7 @@ public class OrderDashboard extends javax.swing.JPanel {
         ActiveOrderPanel = new OrderPanel("ACTIVE", dbm);
         ClosedOrderPanel = new OrderPanel("CLOSED", dbm);
         CustomersPanel = new CustomerPanel(dbm);
+        ReportsPanel = new ReportsPanel(dbm);
 
         setMinimumSize(new java.awt.Dimension(1280, 720));
         setLayout(new java.awt.GridLayout(1, 0));
@@ -46,6 +46,7 @@ public class OrderDashboard extends javax.swing.JPanel {
         OrdersTabbedPane.addTab("Active Orders", ActiveOrderPanel);
         OrdersTabbedPane.addTab("Closed Orders", ClosedOrderPanel);
         OrdersTabbedPane.addTab("Customer Management", CustomersPanel);
+        OrdersTabbedPane.addTab("Reports", ReportsPanel);
 
         add(OrdersTabbedPane);
     }// </editor-fold>//GEN-END:initComponents
@@ -57,5 +58,6 @@ public class OrderDashboard extends javax.swing.JPanel {
     private view.orderdb.CustomerPanel CustomersPanel;
     private view.orderdb.NewOrderPanel NewOrderPanel;
     private javax.swing.JTabbedPane OrdersTabbedPane;
+    private view.orderdb.ReportsPanel ReportsPanel;
     // End of variables declaration//GEN-END:variables
 }

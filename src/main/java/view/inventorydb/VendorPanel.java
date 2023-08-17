@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.inventorydb;
 
 import control.DatabaseManager;
@@ -9,26 +5,39 @@ import java.sql.SQLException;
 import javax.swing.JTable;
 
 /**
- *
- * @author Paul
+ * Panel that generates and holds information about Vendors that supply the company with parts
+ * @author Paul Schmidt
  */
 public class VendorPanel extends javax.swing.JPanel {
+    /**
+     * The dbm that holds a connection to the database
+     */
     private DatabaseManager dbm;
     /**
-     * Creates new form VendorPanel
+     * Creates new form VendorPanel without a connection to a database
      */
     public VendorPanel() {
         initComponents();
     }
+
+    /**
+     * Creates a VendorPanel with a connection to a database
+     * @param dbm the connection to the desired database
+     */
     public VendorPanel(final DatabaseManager dbm) {
         this.dbm = dbm;
         initComponents();
         generateVendors();
     }
+
+    /**
+     * Generates a JTable with information about the Vendors and adds it to the Panel
+     */
     private void generateVendors() {
         JTable testTable = null;
         try {
-            testTable = dbm.executeQueryGetTable("select * from vendors;");
+            testTable = dbm.executeQueryGetTable("select VendorID, VendorName, Email, Phone, Street, City, State\n" +
+                    "from vendors natural join zip;");
             testTable.setAutoCreateRowSorter(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -40,6 +49,11 @@ public class VendorPanel extends javax.swing.JPanel {
             System.out.println("ISSUE CREATING VENDORS TABLE");
         }
     }
+
+    /**
+     * Removes the old table from this Panel and adds a New one to it
+     * @param table the new table to display
+     */
     private void addTable(final JTable table) {
         VendorsScrollPane.getViewport().remove(VendorsTable);
         VendorsTable = table;
@@ -58,19 +72,8 @@ public class VendorPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         VendorsPanel = new javax.swing.JPanel();
-        NewVendorButton = new javax.swing.JButton();
-        EditVendorButton = new javax.swing.JButton();
         VendorsScrollPane = new javax.swing.JScrollPane();
         VendorsTable = new javax.swing.JTable();
-
-        NewVendorButton.setText("New Vendor");
-        NewVendorButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NewVendorButtonActionPerformed(evt);
-            }
-        });
-
-        EditVendorButton.setText("Edit Selected");
 
         VendorsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -101,22 +104,13 @@ public class VendorPanel extends javax.swing.JPanel {
             VendorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(VendorsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(VendorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(VendorsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(VendorsPanelLayout.createSequentialGroup()
-                        .addComponent(NewVendorButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(EditVendorButton)))
+                .addComponent(VendorsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(34, Short.MAX_VALUE))
         );
         VendorsPanelLayout.setVerticalGroup(
             VendorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(VendorsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(VendorsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(NewVendorButton)
-                    .addComponent(EditVendorButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(35, 35, 35)
                 .addComponent(VendorsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(54, Short.MAX_VALUE))
         );
@@ -143,14 +137,8 @@ public class VendorPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void NewVendorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewVendorButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_NewVendorButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton EditVendorButton;
-    private javax.swing.JButton NewVendorButton;
     private javax.swing.JPanel VendorsPanel;
     private javax.swing.JScrollPane VendorsScrollPane;
     private javax.swing.JTable VendorsTable;

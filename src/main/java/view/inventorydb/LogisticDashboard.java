@@ -1,17 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.inventorydb;
 
 import view.orderdb.OrderPanel;
 import control.DatabaseManager;
 
 /**
- *
- * @author Paul
+ * The main Panel that represents a user selecting "Logistics" Dashboard from the Login
+ * @author Paul Schmidt
  */
 public class LogisticDashboard extends javax.swing.JPanel {
+    /**
+     * The dbm that holds a connection to the database
+     */
     private DatabaseManager dbm;
     /**
      * Creates new form LogisticDashboard
@@ -59,11 +58,6 @@ public class LogisticDashboard extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void NewVendorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewVendorButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_NewVendorButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private view.orderdb.OrderPanel ActiveOrdersPanel;

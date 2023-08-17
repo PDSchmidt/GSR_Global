@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.orderdb;
 
 import control.DatabaseManager;
@@ -20,17 +16,42 @@ import model.*;
 import model.entity.*;
 
 /**
- *
- * @author Paul
+ * Custom JPanel that lets the user select a store location, customer, and products to generate a
+ * new order for entry into the database
+ * @author Paul Schmidt
  */
 public class NewOrderPanel extends javax.swing.JPanel {
+    /**
+     * The selected Customer
+     */
     private Customer selectedCustomer;
+    /**
+     * The selected Store
+     */
     private StoreLocation selectedStore;
+    /**
+     * The DatabaseManager that holds a connection to the database
+     */
     private DatabaseManager dbm;
+    /**
+     * The collection of Customers that match the search criteria
+     */
     private Map<String,Customer> custs;
+    /**
+     * The collection of Products in the Order
+     */
     private Map<String, Product> product;
+    /**
+     * The collection of Stores available to the User
+     */
     private Map<String, StoreLocation> stores;
+    /**
+     * The Custom JFrame that the user can use to select Products
+     */
     private ItemSelectFrame itemSelection;
+    /**
+     * The Collection of Order Items for the Order
+     */
     private Map<Integer, NewOrderItem> orderItems;
     /**
      * Creates new form NewOrderPanel
@@ -38,6 +59,11 @@ public class NewOrderPanel extends javax.swing.JPanel {
     public NewOrderPanel() {
         initComponents();
     }
+
+    /**
+     * Creates a NewOrderPanel with the given DatabaseManager
+     * @param dbm the DatabaseManager that stores a connection to the database
+     */
     public NewOrderPanel(final DatabaseManager dbm) {
         this.dbm = dbm;
         product = new HashMap<>();
@@ -55,10 +81,19 @@ public class NewOrderPanel extends javax.swing.JPanel {
         }
         System.out.println("HERE");
     }
+
+    /**
+     * Adds a NewOrderItem to the order
+     * @param theItem the Item to add to the order
+     */
     public void addOrderItem(NewOrderItem theItem) {
         orderItems.put(theItem.getID(), theItem);
         updateOrderTable();
     }
+
+    /**
+     * Updates the information about the order including the items and total
+     */
     public void updateOrderTable() {
         JTable temp = OrderItemsTable;
         NewOrderTableModel model = new NewOrderTableModel();
@@ -73,6 +108,10 @@ public class NewOrderPanel extends javax.swing.JPanel {
         revalidate();
         repaint();
     }
+
+    /**
+     * Updates the total cost of all order items
+     */
     private void updateTotal() {
         BigDecimal total = new BigDecimal("0.00");
         for(NewOrderItem item : orderItems.values()) {
@@ -81,6 +120,12 @@ public class NewOrderPanel extends javax.swing.JPanel {
         OrderSubtotalLabel.setText(NumberFormat.getCurrencyInstance().format(total));
         OrderSubtotalLabel.setSize(133, 25);
     }
+
+    /**
+     * Uses a SQL query to populate a dropdown list of all available stores in which an
+     * order can be placed with
+     * @throws SQLException of there is an issue querying the database
+     */
     private void populateStoreComboBox() throws SQLException {
         StoreLocationComboBox.removeAllItems();
         String query = "select * from storelocations natural join zip;";
@@ -113,6 +158,12 @@ public class NewOrderPanel extends javax.swing.JPanel {
             StoreLocationComboBox.addItem(locnames.get(i));
         }
     }
+
+    /**
+     * Uses a ResultSet to generate the list of customers that match the search criteria
+     * set by the user and queried by the database
+     * @param results the Results of the database query
+     */
     private void populateComboBox(final ResultSet results) {
         CustomerComboBox.removeAllItems();
         try {
@@ -137,6 +188,11 @@ public class NewOrderPanel extends javax.swing.JPanel {
             Logger.getLogger(OrderDashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    /**
+     * Updates the Customer information display based on the selected Customer
+     * @param theName the Name of the Customer to display information about
+     */
     private void updateCustomerInfoDisplay(final String theName) {
         selectedCustomer = custs.get(theName);
         String[] attributes = selectedCustomer.getAttributes();
@@ -149,6 +205,11 @@ public class NewOrderPanel extends javax.swing.JPanel {
         CustState.setText(attributes[6]);
         CustPhone.setText(attributes[7]);
     }
+
+    /**
+     * Uses the selected store to update the displayed store information
+     * @param theName the name of the selected store
+     */
     private void updateLocationInfoDisplay(final String theName) {
         selectedStore = stores.get(theName);
         StoreNameLabel.setText(selectedStore.getStoreName());
@@ -233,18 +294,6 @@ public class NewOrderPanel extends javax.swing.JPanel {
 
         CustSelectLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         CustSelectLabel.setText("Customer Selection");
-
-        FirstNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FirstNameFieldActionPerformed(evt);
-            }
-        });
-
-        LastNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LastNameFieldActionPerformed(evt);
-            }
-        });
 
         FirstNameLabel.setText("First Name");
 
@@ -362,11 +411,6 @@ public class NewOrderPanel extends javax.swing.JPanel {
         OrderSubtotalLabel.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         OrderSubtotalLabel.setText("$0.00");
         OrderSubtotalLabel.setBorder(null);
-        OrderSubtotalLabel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OrderSubtotalLabelActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("Select a location:");
 
@@ -697,14 +741,11 @@ public class NewOrderPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void FirstNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FirstNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FirstNameFieldActionPerformed
-
-    private void LastNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LastNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_LastNameFieldActionPerformed
-
+    /**
+     * Uses the values in the first name and last name search fields to query the database for
+     * customers matching the search criteria
+     * @param evt the buttonclick event
+     */
     private void SearchForCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchForCustomerButtonActionPerformed
         String query = "select * from customers natural join zip where ";
         String first = FirstNameField.getText();
@@ -727,15 +768,16 @@ public class NewOrderPanel extends javax.swing.JPanel {
             rs = dbm.executeQuery(query);
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(query);
         }
         if(rs != null){
-            System.out.println("DID THE THING");
-            System.out.println(query);
             populateComboBox(rs);
         }
     }//GEN-LAST:event_SearchForCustomerButtonActionPerformed
 
+    /**
+     * Deletes the currently selected Order item from the order
+     * @param evt the buttonclick event
+     */
     private void DeleteItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteItemButtonActionPerformed
         int row = OrderItemsTable.getSelectedRow();
         if (row > -1) {
@@ -747,12 +789,21 @@ public class NewOrderPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_DeleteItemButtonActionPerformed
 
+    /**
+     * Generates a new ItemSelectFrame for adding products to the order
+     * @param evt the buttonclick event
+     */
     private void AddItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddItemButtonActionPerformed
         itemSelection = new ItemSelectFrame(dbm, this);
         itemSelection.setAlwaysOnTop(true);
         itemSelection.setVisible(true);
     }//GEN-LAST:event_AddItemButtonActionPerformed
 
+    /**
+     * Submits the order to the database. A customer and a store must be selected, as well as
+     * the order needs to be populated with at least one order item
+     * @param evt the buttonclick event
+     */
     private void SubmitOrderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitOrderButtonActionPerformed
         if (selectedCustomer != null && selectedStore != null && !orderItems.isEmpty()) {
             List<NewOrderItem> items = new ArrayList<>();
@@ -762,7 +813,6 @@ public class NewOrderPanel extends javax.swing.JPanel {
             NewOrder theOrder = new NewOrder(selectedCustomer.getID(), new NewDelivery(selectedCustomer.getZIPCODE(), selectedCustomer.getStreet()), selectedStore.getStoreID(), items);
             boolean success = dbm.addNewOrder(theOrder);
             if(success) {
-                System.out.println("ORDER ADDED TO DATABASE");
                 orderItems.clear();
                 updateOrderTable();
                 CustomerComboBox.removeAllItems();
@@ -778,25 +828,25 @@ public class NewOrderPanel extends javax.swing.JPanel {
                 CustPhone.setText("");
                 JOptionPane.showMessageDialog(this,"Order Submitted Successfully!");
             } else {
-                System.out.println("ERROR SUBMITTING ORDER");
+                JOptionPane.showMessageDialog(this, "Error Submitting Order!");
             }
         }
     }//GEN-LAST:event_SubmitOrderButtonActionPerformed
 
+    /**
+     * Lets the user edit the quantity of the selected order item
+     * @param evt the buttonclick event
+     */
     private void EditItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditItemButtonActionPerformed
         int row = OrderItemsTable.getSelectedRow();
         if (row > -1) {
             int selectedID = (int)OrderItemsTable.getModel().getValueAt(row, 0);
             System.out.println(selectedID);
             NewOrderItem selected = orderItems.get(selectedID);
-            EditOrderItemFrame editFrame = new EditOrderItemFrame(selected, this);
+            new EditOrderItemFrame(selected, this);
         }
 
     }//GEN-LAST:event_EditItemButtonActionPerformed
-
-    private void OrderSubtotalLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderSubtotalLabelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_OrderSubtotalLabelActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

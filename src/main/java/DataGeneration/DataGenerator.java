@@ -4,6 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.*;
 
+/**
+ * A class used to generate some data to populate the Database with
+ * @author Paul Schmidt
+ */
 public class DataGenerator {
 
     public static void main(String[] args) {

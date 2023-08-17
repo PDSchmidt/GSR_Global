@@ -49,11 +49,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="CustomerManagementScrollPane" alignment="0" min="-2" pref="1250" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="NewCustomerButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="EditCustomerButton" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="NewCustomerButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="24" max="32767" attributes="0"/>
               </Group>
@@ -63,10 +59,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="NewCustomerButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="EditCustomerButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="NewCustomerButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="CustomerManagementScrollPane" min="-2" pref="607" max="-2" attributes="0"/>
                   <EmptySpace pref="47" max="32767" attributes="0"/>
@@ -82,11 +75,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="NewCustomerButtonActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="EditCustomerButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Edit Selected"/>
-          </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="CustomerManagementScrollPane">
           <AuxValues>

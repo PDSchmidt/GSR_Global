@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view.orderdb;
 
 import javax.swing.JComponent;
@@ -11,11 +7,17 @@ import javax.swing.text.DefaultFormatter;
 import model.entity.NewOrderItem;
 
 /**
- *
- * @author Paul
+ * A Custom JFrame class that appears when a user wished to edit an Order Item Quantity
+ * @author Paul Schmidt
  */
 public class EditOrderItemFrame extends javax.swing.JFrame {
+    /**
+     * The selected OrderItem
+     */
     private final NewOrderItem currentItem;
+    /**
+     * The parent NewOrderPanel for this custom JFrame
+     */
     private final NewOrderPanel parentPanel;
     /**
      * Creates new form EditOrderItemFrame
@@ -25,6 +27,12 @@ public class EditOrderItemFrame extends javax.swing.JFrame {
         this.parentPanel = null;
         initComponents();
     }
+
+    /**
+     * Creates and displays an EditOrderItemFrame with the given Order Item and Parent Component
+     * @param currentItem the Order Item to edit
+     * @param parentPanel the parent component
+     */
     public EditOrderItemFrame(final NewOrderItem currentItem, final NewOrderPanel parentPanel) {
         initComponents();
         this.currentItem = currentItem;
@@ -108,14 +116,24 @@ public class EditOrderItemFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Closes and disposes this Frame
+     * @param evt the buttonclick event
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    /**
+     * If the new value is greater than 0, updates the order item to the new quantity
+     * @param evt the buttonclick event
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        currentItem.setQuantity((int)QuantitySpinner.getValue());
-        parentPanel.updateOrderTable();
-        this.dispose();
+        if((int)QuantitySpinner.getValue() > 0) {
+            currentItem.setQuantity((int)QuantitySpinner.getValue());
+            parentPanel.updateOrderTable();
+            this.dispose();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

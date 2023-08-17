@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package view.inventorydb;
 
 import control.DatabaseManager;
@@ -9,37 +5,53 @@ import java.sql.SQLException;
 import javax.swing.JTable;
 
 /**
- *
- * @author Paul
+ * A JPanel that is used for displaying the inventory of all stores
+ * @author Paul Schmidt
  */
 public class InventoryPanel extends javax.swing.JPanel {
+    /**
+     * The dbm that holds a connection to the database
+     */
     private DatabaseManager dbm;
     /**
-     * Creates new form InventoryPanel
+     * Creates new form InventoryPanel without a database connection
      */
     public InventoryPanel() {
         initComponents();
     }
+
+    /**
+     * Creates a new InventoryPanel with a database connection
+     * @param dbm the DatabaseManager that holds the connection to the database
+     */
     public InventoryPanel(final DatabaseManager dbm) {
         this.dbm = dbm;
         initComponents();
         generateInventory();
     }
+
+    /**
+     * Queries the database for all inventory information for all stores
+     * and generates the JTable with the information
+     */
     private void generateInventory() {
         JTable testTable = null;
         try {
-            testTable = dbm.executeQueryGetTable("select * from inventory;");
+            testTable = dbm.executeQueryGetTable("select LocationName, PartNumber, PartName, PartDescreption, Quantity\n" +
+                    "from inventory natural join parts natural join storelocations;");
             testTable.setAutoCreateRowSorter(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         if (testTable != null) {
             addTable(testTable);
-            System.out.println("ACTIVE ORDERS TABLE ADDED");
-        } else {
-            System.out.println("ISSUE CREATING ACTIVE ORDERS TABLE");
         }
     }
+
+    /**
+     * Removes the old table from the ScrollPane and adds a new one
+     * @param table the new table to add to the ScrollPane
+     */
     private void addTable(final JTable table) {
         InventoryScrollPane.getViewport().remove(InventoryTable);
         InventoryTable = table;
@@ -59,8 +71,6 @@ public class InventoryPanel extends javax.swing.JPanel {
         InventoryPanel = new javax.swing.JPanel();
         InventoryScrollPane = new javax.swing.JScrollPane();
         InventoryTable = new javax.swing.JTable();
-        ApplyFiltersInventoryButton = new javax.swing.JButton();
-        ResetFiltersInventoryButton = new javax.swing.JButton();
 
         InventoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -85,32 +95,19 @@ public class InventoryPanel extends javax.swing.JPanel {
         InventoryTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         InventoryScrollPane.setViewportView(InventoryTable);
 
-        ApplyFiltersInventoryButton.setText("Apply Filters...");
-
-        ResetFiltersInventoryButton.setText("Reset Filters");
-
         javax.swing.GroupLayout InventoryPanelLayout = new javax.swing.GroupLayout(InventoryPanel);
         InventoryPanel.setLayout(InventoryPanelLayout);
         InventoryPanelLayout.setHorizontalGroup(
             InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(InventoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(InventoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(InventoryPanelLayout.createSequentialGroup()
-                        .addComponent(ApplyFiltersInventoryButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ResetFiltersInventoryButton)))
+                .addComponent(InventoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(34, Short.MAX_VALUE))
         );
         InventoryPanelLayout.setVerticalGroup(
             InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(InventoryPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(InventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ApplyFiltersInventoryButton)
-                    .addComponent(ResetFiltersInventoryButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(35, 35, 35)
                 .addComponent(InventoryScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(54, Short.MAX_VALUE))
         );
@@ -139,10 +136,8 @@ public class InventoryPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton ApplyFiltersInventoryButton;
     private javax.swing.JPanel InventoryPanel;
     private javax.swing.JScrollPane InventoryScrollPane;
     private javax.swing.JTable InventoryTable;
-    private javax.swing.JButton ResetFiltersInventoryButton;
     // End of variables declaration//GEN-END:variables
 }
