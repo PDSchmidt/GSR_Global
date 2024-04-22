@@ -8,17 +8,19 @@ Contains input validation using Regular Expressions throughout program. For ex, 
 To run the program, download GSR_Global-1.0.jar
 
 The program was compiled with Oracle Open JDK v20.0.2
-As such, you will need a JDK as up to date or more up to date than this version
-Login
+As such, you will need a JDK as up to date or more up to date than this version <br />
+
+
+Login <br />
 ![Alt text](Screenshots/Login.PNG?raw=true "Login Dashboard")
 
-Adding New Order
+Adding New Order <br />
 ![Alt text](Screenshots/AddinganOrder.PNG?raw=true "Active Orders")
-Active Orders
+Active Orders <br />
 ![Alt text](Screenshots/ActiveOrders.PNG?raw=true "Active Orders")
-Closed Orders
+Closed Orders <br />
 ![Alt text](Screenshots/ClosedOrders.PNG?raw=true "Closed Orders")
-Generate Custom Reports
+Generate Custom Reports <br />
 ![Alt text](Screenshots/Reports.PNG?raw=true "Generate Custom Reports")
-Add New Customer to Database
+Add New Customer to Database <br />
 ![Alt text](Screenshots/AddingCustomer.PNG?raw=true "Add New Customer")
